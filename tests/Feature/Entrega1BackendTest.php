@@ -1,0 +1,251 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\User;
+use App\Models\Rol;
+use App\Models\PuntoAtencion;
+use App\Models\ComunaCorregimiento;
+use App\Models\BarrioVereda;
+use App\Models\SolicitudEncuesta;
+use Carbon\Carbon;
+
+class Entrega1BackendTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Precargar datos oficiales de Entrega 1 en la base de datos de pruebas
+        $this->seed();
+    }
+
+    /**
+     * Requerimiento 1: Autenticación exitosa de los 5 perfiles institucionales
+     */
+    public function test_login_con_credenciales_validas_y_los_5_roles(): void
+    {
+        $roles = [
+            'admin@cali.gov.co' => 'ADMINISTRADOR',
+            'ventanilla17@cali.gov.co' => 'VENTANILLA',
+            'encuestador1@cali.gov.co' => 'ENCUESTADOR',
+            'calidad@cali.gov.co' => 'CALIDAD',
+            'enrutador@cali.gov.co' => 'ENRUTADOR',
+        ];
+
+        foreach ($roles as $email => $rolEsperado) {
+            $response = $this->postJson('/api/auth/login', [
+                'email' => $email,
+                'password' => 'Password123!',
+            ]);
+
+            $response->assertStatus(200)
+                ->assertJson([
+                    'success' => true,
+                    'user' => [
+                        'email' => $email,
+                        'rol' => $rolEsperado,
+                    ],
+                ]);
+
+            $this->assertAuthenticated();
+            $this->post('/logout');
+        }
+    }
+
+    /**
+     * Requerimiento 1: Rechazo de credenciales incorrectas
+     */
+    public function test_login_rechaza_credenciales_invalidas(): void
+    {
+        $response = $this->postJson('/api/auth/login', [
+            'email' => 'ventanilla17@cali.gov.co',
+            'password' => 'PasswordErronea999',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJson([
+                'success' => false,
+            ]);
+
+        $this->assertGuest();
+    }
+
+    /**
+     * Requerimiento 2: Catálogo territorial de Cali retorna Comunas (1-22) y Corregimientos
+     */
+    public function test_catalogo_territorial_retorna_comunas_y_corregimientos(): void
+    {
+        $response = $this->getJson('/api/territorio/comunas-corregimientos');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $data = $response->json('data');
+        $this->assertGreaterThanOrEqual(37, count($data)); // 22 comunas + 15 corregimientos
+    }
+
+    /**
+     * Requerimiento 2: Filtrado dinámico de barrios estrictamente asociados a una comuna
+     */
+    public function test_catalogo_barrios_filtra_estrictamente_por_comuna(): void
+    {
+        // Consultar barrios de Comuna 17 (El Ingenio, Pasoancho, etc.)
+        $response = $this->getJson('/api/territorio/barrios?comuna_id=17');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'comuna_corregimiento_id' => 17,
+            ]);
+
+        $barrios = $response->json('data');
+        $this->assertNotEmpty($barrios);
+
+        foreach ($barrios as $barrio) {
+            $this->assertEquals(17, $barrio['comuna_corregimiento_id']);
+        }
+    }
+
+    /**
+     * Requerimiento 5 (Precarga de Sedes): Listado de puntos de atención oficiales
+     */
+    public function test_puntos_atencion_retorna_sedes_oficiales_cali(): void
+    {
+        $response = $this->getJson('/api/puntos-atencion');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $sedes = $response->json('data');
+        $comunasSedes = array_column($sedes, 'comuna_numero');
+
+        // Sedes exigidas: Comunas 1, 6, 7, 13, 14, 20, 21 y 17 (Sede Principal)
+        $sedesEsperadas = [1, 6, 7, 13, 14, 17, 20, 21];
+        foreach ($sedesEsperadas as $comunaNum) {
+            $this->assertContains($comunaNum, $comunasSedes);
+        }
+    }
+
+    /**
+     * Requerimientos 2 y 3: Radicación exitosa de solicitud con georreferenciación en Ventanilla
+     */
+    public function test_ventanilla_puede_radicar_solicitud_georreferenciada(): void
+    {
+        $userVentanilla = User::where('email', 'ventanilla17@cali.gov.co')->first();
+
+        $payload = [
+            'nombres_solicitante' => 'Carlos Andrés',
+            'apellidos_solicitante' => 'Pérez Murillo',
+            'celular' => '3158901234',
+            'direccion' => 'Calle 13B # 85-20, Casa 4',
+            'comuna_corregimiento_id' => 17,
+            'barrio_id' => 60, // Pasoancho (Comuna 17)
+            'latitud' => 3.3768,
+            'longitud' => -76.5369,
+            'punto_atencion_id' => 1,
+            'observaciones' => 'Prueba de radicación automatizada',
+        ];
+
+        $response = $this->actingAs($userVentanilla)
+            ->postJson('/api/solicitudes', $payload);
+
+        $response->assertStatus(201)
+            ->assertJson([
+                'success' => true,
+                'data' => [
+                    'solicitante' => 'Carlos Andrés Pérez Murillo',
+                    'estado' => 'RADICADA',
+                    'dias_restantes' => 15, // Cálculo de política +15 días
+                ],
+            ]);
+
+        $this->assertDatabaseHas('solicitudes_encuesta', [
+            'nombres_solicitante' => 'Carlos Andrés',
+            'celular' => '3158901234',
+            'estado' => 'RADICADA',
+        ]);
+    }
+
+    /**
+     * Requerimientos 2 y 3: Incoherencia territorial (barrio no pertenece a comuna) es rechazada
+     */
+    public function test_ventanilla_rechaza_incoherencia_entre_barrio_y_comuna(): void
+    {
+        $userVentanilla = User::where('email', 'ventanilla17@cali.gov.co')->first();
+
+        // Barrio 1 (Terrón Colorado en Comuna 1) pero indicando Comuna 17
+        $payload = [
+            'nombres_solicitante' => 'Incoherencia',
+            'apellidos_solicitante' => 'Territorial',
+            'celular' => '3158901234',
+            'direccion' => 'Calle Falsa 123',
+            'comuna_corregimiento_id' => 17, // Comuna 17
+            'barrio_id' => 1, // Barrio de Comuna 1
+            'latitud' => 3.3768,
+            'longitud' => -76.5369,
+            'punto_atencion_id' => 1,
+        ];
+
+        $response = $this->actingAs($userVentanilla)
+            ->postJson('/api/solicitudes', $payload);
+
+        $response->assertStatus(422)
+            ->assertJson([
+                'success' => false,
+            ]);
+    }
+
+    /**
+     * Requerimiento 4: Bitácora Diaria del Enrutador consolida solicitudes del día
+     */
+    public function test_enrutador_puede_consultar_bitacora_diaria_consolidada(): void
+    {
+        $userEnrutador = User::where('email', 'enrutador@cali.gov.co')->first();
+
+        $response = $this->actingAs($userEnrutador)
+            ->getJson('/api/enrutador/bitacora-diaria');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $data = $response->json('data');
+        $this->assertNotEmpty($data);
+
+        // Verificar que los campos exigidos están presentes en la bitácora
+        $primeraSolicitud = $data[0];
+        $this->assertArrayHasKey('radicado_codigo', $primeraSolicitud);
+        $this->assertArrayHasKey('solicitante', $primeraSolicitud);
+        $this->assertArrayHasKey('comuna_nombre', $primeraSolicitud);
+        $this->assertArrayHasKey('barrio_nombre', $primeraSolicitud);
+        $this->assertArrayHasKey('latitud', $primeraSolicitud);
+        $this->assertArrayHasKey('longitud', $primeraSolicitud);
+        $this->assertArrayHasKey('hora_radicacion', $primeraSolicitud);
+        $this->assertArrayHasKey('dias_restantes', $primeraSolicitud);
+    }
+
+    /**
+     * Control de Acceso por Roles: Perfiles sin permisos son bloqueados
+     */
+    public function test_usuarios_no_autorizados_son_bloqueados_en_ventanilla_y_enrutador(): void
+    {
+        $userEncuestador = User::where('email', 'encuestador1@cali.gov.co')->first();
+
+        // Encuestador intentando acceder a ventanilla
+        $responseVentanilla = $this->actingAs($userEncuestador)->get('/ventanilla');
+        $responseVentanilla->assertStatus(302); // Redirige al dashboard
+
+        // Encuestador intentando acceder a la API de bitácora del enrutador
+        $responseBitacora = $this->actingAs($userEncuestador)->getJson('/api/enrutador/bitacora-diaria');
+        $responseBitacora->assertStatus(403);
+    }
+}

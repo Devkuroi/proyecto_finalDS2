@@ -1,0 +1,69 @@
+# =====================================================================
+# SISTEMA DE GESTIÓN Y GEORREFERENCIACIÓN DE ENCUESTAS - SANTIAGO DE CALI
+# DOCKER COMPOSE ORCHESTRATION (APP LARAVEL + MYSQL 8.0)
+# Sub-Agente 4: DevOps_Agent
+# =====================================================================
+
+services:
+  # Servicio 1: Base de Datos MySQL 8.0 con Precarga Automática de Esquema y Datos
+  db:
+    image: mysql:8.0
+    container_name: encuestas_cali_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secure_cali
+      MYSQL_DATABASE: gestion_encuestas_cali
+      MYSQL_USER: cali_user
+      MYSQL_PASSWORD: cali_pass_secure
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Precarga de Scripts SQL exigidos en la rúbrica (schema.sql y data.sql)
+      - ./database/sql/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./database/sql/data.sql:/docker-entrypoint-initdb.d/02_data.sql:ro
+    networks:
+      - cali_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_secure_cali"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  # Servicio 2: Aplicación Web Laravel (PHP 8.2 + Apache + Leaflet RIA)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: encuestas_cali_app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    environment:
+      APP_NAME: "EncuestasCali"
+      APP_ENV: local
+      APP_KEY: "base64:9YqW+q6F7j8K5nL2mP0rT3vX1aC4eF6hI8kM0oP2s4U="
+      APP_DEBUG: "true"
+      APP_URL: "http://localhost:8000"
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: gestion_encuestas_cali
+      DB_USERNAME: cali_user
+      DB_PASSWORD: cali_pass_secure
+      SESSION_DRIVER: database
+      QUEUE_CONNECTION: sync
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - cali_network
+
+networks:
+  cali_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
