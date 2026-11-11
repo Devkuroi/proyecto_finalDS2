@@ -123,9 +123,21 @@
     @if(session('success') || session('error') || session('info'))
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4" role="status" aria-live="polite">
         @if(session('success'))
-            <div class="p-4 mb-3 text-sm text-emerald-900 rounded-lg bg-emerald-50 border border-emerald-300 flex items-center space-x-2">
-                <i class="fa-solid fa-circle-check text-emerald-700 text-lg"></i>
-                <span class="font-medium">{{ session('success') }}</span>
+            <div x-data="{ visible: true }"
+                 x-init="setTimeout(() => visible = false, 4000)"
+                 x-show="visible"
+                 x-transition:leave="transition ease-in duration-300"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="p-4 mb-3 text-sm text-emerald-900 rounded-lg bg-emerald-50 border border-emerald-300 flex items-center justify-between"
+                 role="status">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-circle-check text-emerald-700 text-lg"></i>
+                    <span class="font-medium">{{ session('success') }}</span>
+                </div>
+                <button type="button" @click="visible = false" class="text-emerald-700 hover:text-emerald-900 text-xs px-2 py-1 rounded" title="Cerrar" aria-label="Cerrar notificación">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
         @endif
         @if(session('error'))
@@ -135,9 +147,21 @@
             </div>
         @endif
         @if(session('info'))
-            <div class="p-4 mb-3 text-sm text-sky-900 rounded-lg bg-sky-50 border border-sky-300 flex items-center space-x-2">
-                <i class="fa-solid fa-circle-info text-sky-700 text-lg"></i>
-                <span class="font-medium">{{ session('info') }}</span>
+            <div x-data="{ visible: true }"
+                 x-init="setTimeout(() => visible = false, 4000)"
+                 x-show="visible"
+                 x-transition:leave="transition ease-in duration-300"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="p-4 mb-3 text-sm text-sky-900 rounded-lg bg-sky-50 border border-sky-300 flex items-center justify-between"
+                 role="status">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-circle-info text-sky-700 text-lg"></i>
+                    <span class="font-medium">{{ session('info') }}</span>
+                </div>
+                <button type="button" @click="visible = false" class="text-sky-600 hover:text-sky-800 text-xs px-2 py-1 rounded" title="Cerrar" aria-label="Cerrar notificación">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
         @endif
     </div>
