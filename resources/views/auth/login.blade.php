@@ -120,11 +120,6 @@
                     </span>
                     <span class="text-xs text-slate-400">Acceso rápido</span>
                 </div>
-                <button type="button" @click="modoDemo = false"
-                    class="min-h-9.5-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition border border-slate-700 flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-amber-400">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    <span>Volver al formulario</span>
-                </button>
             </div>
 
             <p class="text-xs text-slate-300 mb-4 leading-relaxed">
