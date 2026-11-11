@@ -3,7 +3,7 @@
 @section('title', 'Acceso al Sistema Institucional')
 
 @section('content')
-<div class="min-h-[calc(100vh-8rem)] flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-100 to-slate-200"
+<div class="min-h-[calc(100vh-8.5rem)] flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8 bg-slate-100"
      x-data="{
         email: '{{ old('email', 'ventanilla17@cali.gov.co') }}',
         password: 'Password123!',
@@ -19,29 +19,29 @@
             }
         }
      }">
-    <div class="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+    <div class="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
-        <!-- Panel Izquierdo: Formulario de Login -->
-        <div class="lg:col-span-7 bg-white p-8 rounded-2xl shadow-xl border border-slate-200 flex flex-col justify-between">
+        <!-- Panel Izquierdo: Formulario de Login Principal -->
+        <div class="lg:col-span-7 bg-white p-7 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
             <div>
                 <!-- Encabezado del Formulario -->
                 <div class="flex items-center space-x-3 mb-6">
-                    <div class="w-12 h-12 rounded-xl bg-cali-blue text-cali-gold flex items-center justify-center text-2xl shadow">
+                    <div class="w-12 h-12 rounded-lg bg-cali-blue text-white flex items-center justify-center text-xl shadow-sm">
                         <i class="fa-solid fa-shield-halved"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold text-slate-900">Iniciar Sesión</h2>
-                        <p class="text-xs text-slate-500">Módulo de Autenticación de Perfiles (Req 1)</p>
+                        <h1 class="text-xl font-bold text-slate-900">Iniciar Sesión</h1>
+                        <p class="text-xs text-slate-600 font-medium">Módulo de Autenticación de Perfiles (Requerimiento 1)</p>
                     </div>
                 </div>
 
                 @if($errors->any())
-                <div class="mb-5 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-sm">
-                    <div class="font-semibold flex items-center space-x-1">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
+                <div class="mb-5 p-3.5 rounded-lg bg-rose-50 border border-rose-300 text-rose-900 text-xs" role="alert">
+                    <div class="font-bold flex items-center space-x-1.5 text-sm">
+                        <i class="fa-solid fa-triangle-exclamation text-rose-700"></i>
                         <span>Error de Acceso</span>
                     </div>
-                    <ul class="list-disc list-inside mt-1 text-xs space-y-1">
+                    <ul class="list-disc list-inside mt-1.5 space-y-1">
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -53,47 +53,49 @@
                     @csrf
 
                     <div>
-                        <label for="email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                            Correo Electrónico Institucional
+                        <label for="email" class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
+                            Correo Electrónico Institucional *
                         </label>
-                        <div class="relative rounded-md shadow-sm">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <div class="relative rounded-lg shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
                                 <i class="fa-solid fa-envelope"></i>
                             </div>
                             <input type="email" id="email" name="email" x-model="email" required
-                                class="block w-full pl-10 pr-3 py-2.5 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-cali-blue focus:border-cali-blue transition placeholder-slate-400"
+                                class="block w-full pl-10 pr-3 py-2.5 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-cali-blue focus:border-cali-blue transition placeholder-slate-500 text-slate-900"
                                 placeholder="usuario@cali.gov.co">
                         </div>
                     </div>
 
                     <div>
-                        <label for="password" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                            Contraseña Institucional
+                        <label for="password" class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
+                            Contraseña Institucional *
                         </label>
-                        <div class="relative rounded-md shadow-sm">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <div class="relative rounded-lg shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
                                 <i class="fa-solid fa-lock"></i>
                             </div>
                             <input type="password" id="password" name="password" x-model="password" required
-                                class="block w-full pl-10 pr-3 py-2.5 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-cali-blue focus:border-cali-blue transition placeholder-slate-400"
+                                class="block w-full pl-10 pr-3 py-2.5 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-cali-blue focus:border-cali-blue transition placeholder-slate-500 text-slate-900"
                                 placeholder="••••••••">
                         </div>
                     </div>
 
                     <div class="flex items-center justify-between text-xs pt-1">
-                        <label class="flex items-center text-slate-600">
-                            <input type="checkbox" name="remember" class="rounded border-slate-300 text-cali-blue focus:ring-cali-blue mr-2">
+                        <label class="flex items-center text-slate-700 cursor-pointer">
+                            <input type="checkbox" name="remember" class="rounded border-slate-300 text-cali-blue focus:ring-cali-blue mr-2 h-4 w-4">
                             Recordar sesión en este equipo
                         </label>
-                        <span class="text-slate-400">Entrega 1 • Santiago de Cali</span>
+                        <span class="text-slate-600 font-medium">Entrega 1 • Santiago de Cali</span>
                     </div>
 
                     <div class="pt-2">
                         <button type="submit" :disabled="cargando"
-                            class="w-full flex justify-center items-center space-x-2 py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-bold text-white bg-cali-blue hover:bg-cali-darkblue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cali-blue transition duration-150">
-                            <span x-show="!cargando"><i class="fa-solid fa-right-to-bracket mr-2"></i>Ingresar al Sistema</span>
+                            class="w-full min-h-[44px] flex justify-center items-center space-x-2 py-3 px-4 rounded-lg shadow-sm text-sm font-bold text-white bg-cali-blue hover:bg-cali-darkblue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cali-blue transition duration-150">
+                            <span x-show="!cargando" class="flex items-center">
+                                <i class="fa-solid fa-right-to-bracket mr-2"></i>Ingresar al Sistema
+                            </span>
                             <span x-show="cargando" x-cloak class="flex items-center">
-                                <i class="fa-solid fa-spinner fa-spin mr-2"></i> Autenticando...
+                                <i class="fa-solid fa-spinner fa-spin mr-2"></i> Autenticando credenciales...
                             </span>
                         </button>
                     </div>
@@ -101,138 +103,138 @@
             </div>
 
             <!-- Información Institucional de Seguridad -->
-            <div class="mt-6 pt-4 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
+            <div class="mt-6 pt-4 border-t border-slate-200 text-xs text-slate-600 flex items-center justify-between">
                 <span>Alcaldía Distrital de Santiago de Cali</span>
-                <span>Conexión segura SSL/TLS</span>
+                <span class="font-medium text-emerald-700"><i class="fa-solid fa-lock mr-1"></i>Acceso Seguro</span>
             </div>
         </div>
 
-        <!-- Panel Derecho: Selector Rápido "Demo Mode" para Sustentación del Profesor -->
-        <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-xl flex flex-col justify-between border border-slate-700">
+        <!-- Panel Derecho: Selector Rápido para Demostración Institucional -->
+        <div class="lg:col-span-5 bg-slate-900 text-white p-6 rounded-xl shadow-sm flex flex-col justify-between border border-slate-700">
             <div>
                 <div class="flex items-center justify-between mb-4">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-slate-900">
-                        <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> MODO DEMOSTRACIÓN (1 CLIC)
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-amber-400 text-slate-900">
+                        <i class="fa-solid fa-id-card-clip mr-1.5"></i> MODO DEMOSTRACIÓN (1 CLIC)
                     </span>
-                    <span class="text-[11px] text-slate-400 font-mono">5 Perfiles</span>
+                    <span class="text-xs text-slate-300 font-mono">5 Perfiles</span>
                 </div>
 
                 <p class="text-xs text-slate-300 mb-4 leading-relaxed">
-                    Haga clic en cualquiera de los 5 perfiles para <strong>autenticarse instantáneamente</strong> y verificar los permisos exigidos en la rúbrica:
+                    Seleccione cualquiera de los 5 roles normativos para <strong>autenticarse en un clic</strong> y verificar los permisos de la rúbrica:
                 </p>
 
-                <!-- Tarjetas de Acceso Rápido por Perfil -->
+                <!-- Tarjetas de Acceso por Perfil sin flechas decorativas -->
                 <div class="space-y-2.5">
                     
                     <!-- 1. VENTANILLA (Comuna 17 - Sede Principal) -->
                     <button type="button" @click="setDemo('ventanilla17@cali.gov.co', 'Password123!', true)"
-                        class="w-full text-left p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-emerald-500/30 hover:border-emerald-400 transition flex items-center justify-between group">
+                        class="w-full min-h-[44px] text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-emerald-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
                         <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
+                            <div class="w-8 h-8 rounded-md bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-sm">
                                 <i class="fa-solid fa-desktop"></i>
                             </div>
                             <div>
                                 <div class="text-xs font-bold text-white group-hover:text-emerald-300 flex items-center space-x-1.5">
                                     <span>VENTANILLA (Comuna 17 - Principal)</span>
-                                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.2 rounded">Req 2 & 3</span>
+                                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded-md font-semibold">Req 2 & 3</span>
                                 </div>
-                                <div class="text-[11px] text-slate-400">ventanilla17@cali.gov.co</div>
+                                <div class="text-[11px] text-slate-300 font-mono">ventanilla17@cali.gov.co</div>
                             </div>
                         </div>
-                        <i class="fa-solid fa-arrow-right text-xs text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition transform"></i>
+                        <span class="text-[11px] font-semibold text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded-md">Entrar</span>
                     </button>
 
                     <!-- 2. VENTANILLA (CALI 1 - Terrón Colorado) -->
                     <button type="button" @click="setDemo('ventanilla1@cali.gov.co', 'Password123!', true)"
-                        class="w-full text-left p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-emerald-500/30 hover:border-emerald-400 transition flex items-center justify-between group">
+                        class="w-full min-h-[44px] text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-emerald-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
                         <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
+                            <div class="w-8 h-8 rounded-md bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-sm">
                                 <i class="fa-solid fa-location-pin"></i>
                             </div>
                             <div>
                                 <div class="text-xs font-bold text-white group-hover:text-emerald-300 flex items-center space-x-1.5">
                                     <span>VENTANILLA (CALI 1 - Terrón Colorado)</span>
                                 </div>
-                                <div class="text-[11px] text-slate-400">ventanilla1@cali.gov.co</div>
+                                <div class="text-[11px] text-slate-300 font-mono">ventanilla1@cali.gov.co</div>
                             </div>
                         </div>
-                        <i class="fa-solid fa-arrow-right text-xs text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition transform"></i>
+                        <span class="text-[11px] font-semibold text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded-md">Entrar</span>
                     </button>
 
                     <!-- 3. ENRUTADOR -->
                     <button type="button" @click="setDemo('enrutador@cali.gov.co', 'Password123!', true)"
-                        class="w-full text-left p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-sky-500/30 hover:border-sky-400 transition flex items-center justify-between group">
+                        class="w-full min-h-[44px] text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-sky-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
                         <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm">
+                            <div class="w-8 h-8 rounded-md bg-sky-500/20 text-sky-300 flex items-center justify-center font-bold text-sm">
                                 <i class="fa-solid fa-route"></i>
                             </div>
                             <div>
                                 <div class="text-xs font-bold text-white group-hover:text-sky-300 flex items-center space-x-1.5">
                                     <span>ENRUTADOR (Bitácora Diaria)</span>
-                                    <span class="text-[10px] bg-sky-500/20 text-sky-300 px-1.5 py-0.2 rounded">Req 4</span>
+                                    <span class="text-[10px] bg-sky-500/20 text-sky-300 px-1.5 py-0.5 rounded-md font-semibold">Req 4</span>
                                 </div>
-                                <div class="text-[11px] text-slate-400">enrutador@cali.gov.co</div>
+                                <div class="text-[11px] text-slate-300 font-mono">enrutador@cali.gov.co</div>
                             </div>
                         </div>
-                        <i class="fa-solid fa-arrow-right text-xs text-slate-500 group-hover:text-sky-400 group-hover:translate-x-1 transition transform"></i>
+                        <span class="text-[11px] font-semibold text-sky-400 border border-sky-400/30 px-2 py-0.5 rounded-md">Entrar</span>
                     </button>
 
                     <!-- 4. ADMINISTRADOR -->
                     <button type="button" @click="setDemo('admin@cali.gov.co', 'Password123!', true)"
-                        class="w-full text-left p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-indigo-500/30 hover:border-indigo-400 transition flex items-center justify-between group">
+                        class="w-full min-h-[44px] text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-indigo-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
                         <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-sm">
+                            <div class="w-8 h-8 rounded-md bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold text-sm">
                                 <i class="fa-solid fa-user-gear"></i>
                             </div>
                             <div>
                                 <div class="text-xs font-bold text-white group-hover:text-indigo-300 flex items-center space-x-1.5">
                                     <span>ADMINISTRADOR (Control Maestro)</span>
                                 </div>
-                                <div class="text-[11px] text-slate-400">admin@cali.gov.co</div>
+                                <div class="text-[11px] text-slate-300 font-mono">admin@cali.gov.co</div>
                             </div>
                         </div>
-                        <i class="fa-solid fa-arrow-right text-xs text-slate-500 group-hover:text-indigo-400 group-hover:translate-x-1 transition transform"></i>
+                        <span class="text-[11px] font-semibold text-indigo-400 border border-indigo-400/30 px-2 py-0.5 rounded-md">Entrar</span>
                     </button>
 
                     <!-- 5. ENCUESTADOR -->
                     <button type="button" @click="setDemo('encuestador1@cali.gov.co', 'Password123!', true)"
-                        class="w-full text-left p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-teal-500/30 hover:border-teal-400 transition flex items-center justify-between group">
+                        class="w-full min-h-[44px] text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-teal-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
                         <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-sm">
+                            <div class="w-8 h-8 rounded-md bg-teal-500/20 text-teal-300 flex items-center justify-center font-bold text-sm">
                                 <i class="fa-solid fa-clipboard-user"></i>
                             </div>
                             <div>
                                 <div class="text-xs font-bold text-white group-hover:text-teal-300 flex items-center space-x-1.5">
                                     <span>ENCUESTADOR (Operación Campo)</span>
                                 </div>
-                                <div class="text-[11px] text-slate-400">encuestador1@cali.gov.co</div>
+                                <div class="text-[11px] text-slate-300 font-mono">encuestador1@cali.gov.co</div>
                             </div>
                         </div>
-                        <i class="fa-solid fa-arrow-right text-xs text-slate-500 group-hover:text-teal-400 group-hover:translate-x-1 transition transform"></i>
+                        <span class="text-[11px] font-semibold text-teal-400 border border-teal-400/30 px-2 py-0.5 rounded-md">Entrar</span>
                     </button>
 
                     <!-- 6. CALIDAD -->
                     <button type="button" @click="setDemo('calidad@cali.gov.co', 'Password123!', true)"
-                        class="w-full text-left p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-purple-500/30 hover:border-purple-400 transition flex items-center justify-between group">
+                        class="w-full min-h-[44px] text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-purple-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
                         <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm">
+                            <div class="w-8 h-8 rounded-md bg-purple-500/20 text-purple-300 flex items-center justify-center font-bold text-sm">
                                 <i class="fa-solid fa-award"></i>
                             </div>
                             <div>
                                 <div class="text-xs font-bold text-white group-hover:text-purple-300 flex items-center space-x-1.5">
                                     <span>CALIDAD (Auditoría Metodológica)</span>
                                 </div>
-                                <div class="text-[11px] text-slate-400">calidad@cali.gov.co</div>
+                                <div class="text-[11px] text-slate-300 font-mono">calidad@cali.gov.co</div>
                             </div>
                         </div>
-                        <i class="fa-solid fa-arrow-right text-xs text-slate-500 group-hover:text-purple-400 group-hover:translate-x-1 transition transform"></i>
+                        <span class="text-[11px] font-semibold text-purple-400 border border-purple-400/30 px-2 py-0.5 rounded-md">Entrar</span>
                     </button>
 
                 </div>
             </div>
 
-            <div class="mt-4 pt-3 border-t border-slate-700/60 text-[11px] text-slate-400 text-center">
-                Contraseña universal de prueba: <code class="text-amber-300 font-mono font-bold bg-slate-800 px-1.5 py-0.5 rounded">Password123!</code>
+            <div class="mt-4 pt-3 border-t border-slate-700 text-xs text-slate-300 text-center">
+                Contraseña universal de prueba: <code class="text-amber-300 font-mono font-bold bg-slate-800 px-2 py-0.5 rounded border border-slate-700">Password123!</code>
             </div>
         </div>
 

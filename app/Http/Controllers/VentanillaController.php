@@ -128,7 +128,6 @@ class VentanillaController extends Controller
 
             DB::commit();
 
-            // Cargar relaciones para la respuesta
             $solicitud->load(['barrio', 'comunaCorregimiento', 'puntoAtencion', 'usuarioVentanilla']);
 
             return response()->json([

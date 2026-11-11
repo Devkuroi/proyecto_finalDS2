@@ -14,11 +14,6 @@ class User extends Authenticatable
 
     protected $table = 'usuarios';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'nombre',
         'email',
@@ -30,21 +25,11 @@ class User extends Authenticatable
         'activo',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -53,33 +38,21 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Relación con el rol del usuario
-     */
     public function rol(): BelongsTo
     {
         return $this->belongsTo(Rol::class, 'rol_id');
     }
 
-    /**
-     * Relación con el punto de atención asignado (si aplica)
-     */
     public function puntoAtencion(): BelongsTo
     {
         return $this->belongsTo(PuntoAtencion::class, 'punto_atencion_id');
     }
 
-    /**
-     * Solicitudes radicadas por este usuario en ventanilla
-     */
     public function solicitudesRadicadas(): HasMany
     {
         return $this->hasMany(SolicitudEncuesta::class, 'usuario_ventanilla_id');
     }
 
-    /**
-     * Helper para verificar si tiene un rol específico
-     */
     public function hasRole(string $nombreRol): bool
     {
         return $this->rol && strtoupper($this->rol->nombre) === strtoupper($nombreRol);
