@@ -31,9 +31,9 @@
                 <label for="filtroFecha" class="font-bold">Fecha:</label>
             </div>
             <input id="filtroFecha" type="date" x-model="filtros.fecha" @change="consultarBitacora()"
-                class="min-h-[40px] text-xs font-semibold rounded-lg border border-slate-300 px-3 py-1.5 bg-white text-slate-900 focus:ring-2 focus:ring-cali-blue">
+                class="min-h-10 text-xs font-semibold rounded-lg border border-slate-300 px-3 py-1.5 bg-white text-slate-900 focus:ring-2 focus:ring-cali-blue">
             <button type="button" @click="consultarBitacora()" :disabled="cargando"
-                class="min-h-[40px] min-w-[40px] p-2 rounded-lg bg-cali-blue hover:bg-cali-darkblue text-white transition disabled:opacity-50 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-400"
+                class="min-h-10 min-w-10 p-2 rounded-lg bg-cali-blue hover:bg-cali-darkblue text-white transition disabled:opacity-50 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-400"
                 title="Actualizar Datos de Bitácora"
                 aria-label="Actualizar Datos de Bitácora">
                 <i class="fa-solid fa-rotate" :class="cargando ? 'fa-spin' : ''"></i>
@@ -166,7 +166,7 @@
             </div>
 
             <!-- Mapa Leaflet -->
-            <div id="mapaBitacora" class="w-full h-[400px] rounded-lg border border-slate-300 shadow-inner z-10" aria-label="Mapa consolidado de solicitudes"></div>
+            <div id="mapaBitacora" class="w-full h-[480px] min-h-[420px] rounded-lg border border-slate-300 shadow-inner z-10" style="height: 480px; min-height: 420px;" aria-label="Mapa consolidado de solicitudes"></div>
         </div>
 
         <!-- Tabla Detallada de la Bitácora Diaria -->
@@ -216,7 +216,7 @@
                                     <span class="block text-[10px]" :class="item.zona === 'RURAL' ? 'text-amber-800 font-bold' : 'text-slate-500'" x-text="item.zona"></span>
                                 </td>
                                 <td class="py-3 px-3 font-medium text-slate-800" x-text="item.barrio_nombre"></td>
-                                <td class="py-3 px-3 text-slate-700 truncate max-w-[180px]" :title="item.direccion" x-text="item.direccion"></td>
+                                <td class="py-3 px-3 text-slate-700 truncate max-w-45" :title="item.direccion" x-text="item.direccion"></td>
                                 <td class="py-3 px-3">
                                     <span class="text-[11px] font-semibold text-slate-900" x-text="item.punto_atencion_nombre"></span>
                                 </td>
@@ -297,6 +297,12 @@ function bitacoraApp() {
                 attribution: '&copy; OpenStreetMap contributors | Alcaldía de Cali',
                 maxZoom: 19
             }).addTo(this.mapa);
+
+            setTimeout(() => {
+                if (this.mapa) {
+                    this.mapa.invalidateSize();
+                }
+            }, 250);
 
             this.markersLayer = L.layerGroup().addTo(this.mapa);
 

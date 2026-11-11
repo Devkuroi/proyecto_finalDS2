@@ -61,7 +61,7 @@
 
                 <div class="mt-5 flex space-x-3">
                     <button type="button" @click="modalExito = false"
-                        class="w-full min-h-[44px] py-2.5 px-4 rounded-lg bg-cali-blue hover:bg-cali-darkblue text-white font-bold text-xs shadow-sm transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cali-blue">
+                        class="w-full min-h-11 py-2.5 px-4 rounded-lg bg-cali-blue hover:bg-cali-darkblue text-white font-bold text-xs shadow-sm transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cali-blue">
                         <i class="fa-solid fa-plus mr-1.5"></i> Radicar Siguiente Solicitud
                     </button>
                 </div>
@@ -76,7 +76,6 @@
         <div class="lg:col-span-5 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
                 <span class="text-sm font-semibold text-slate-800">Datos de la solicitud</span>
-                <span class="text-xs text-slate-600 font-semibold">* Campos obligatorios</span>
             </div>
 
             <!-- Alertas de Error en Formulario -->
@@ -89,7 +88,7 @@
             </div>
 
             <form @submit.prevent="guardarSolicitud()" class="space-y-4">
-                
+
                 <!-- Nombres y Apellidos -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
@@ -136,8 +135,8 @@
                 </div>
 
                 <div>
-                    <label for="campoDireccion" class="block text-xs font-bold text-slate-800 mb-1 flex items-center justify-between">
-                        <span>Dirección del Predio en Cali *</span>
+                    <label for="campoDireccion" class="block text-xs font-bold text-slate-800 mb-1 items-center justify-between">
+                        <span>Dirección del solicitante *</span>
                         <span x-show="buscandoDireccion" x-cloak class="text-[11px] text-cali-blue font-semibold">
                             <i class="fa-solid fa-spinner fa-spin mr-1"></i> Verificando en Cali...
                         </span>
@@ -147,7 +146,7 @@
                             class="w-full text-xs rounded-lg border border-slate-300 px-3 py-2.5 focus:ring-2 focus:ring-cali-blue focus:border-cali-blue transition placeholder-slate-500 text-slate-900"
                             placeholder="Ej. Calle 13B # 85-10 / Cra 1 # 4-50 / Km 12 Vía Vorágine">
                         <button type="button" @click="buscarDireccionEnMapa()" title="Verificar y ubicar dirección en el mapa de Cali"
-                            class="min-h-[38px] px-3.5 py-2 bg-cali-blue hover:bg-cali-darkblue text-white text-xs font-bold rounded-lg transition flex items-center space-x-1.5 shrink-0 focus:outline-none focus:ring-2 focus:ring-cali-blue">
+                            class="min-h-9.5 px-3.5 py-2 bg-cali-blue hover:bg-cali-darkblue text-white text-xs font-bold rounded-lg transition flex items-center space-x-1.5 shrink-0 focus:outline-none focus:ring-2 focus:ring-cali-blue">
                             <i class="fa-solid fa-magnifying-glass-location"></i>
                             <span class="hidden sm:inline">Ubicar</span>
                         </button>
@@ -189,7 +188,7 @@
                     </div>
 
                     <div>
-                        <label for="campoBarrio" class="block text-xs font-bold text-slate-900 mb-1 flex items-center justify-between">
+                        <label for="campoBarrio" class="block text-xs font-bold text-slate-900 mb-1 items-center justify-between">
                             <span>Barrio o Vereda *</span>
                             <span x-show="cargandoBarrios" x-cloak class="text-[11px] text-cali-blue font-semibold">
                                 <i class="fa-solid fa-spinner fa-spin mr-1"></i> Cargando...
@@ -241,10 +240,6 @@
                                 class="w-full text-xs font-mono rounded-lg border border-blue-200 px-2.5 py-1.5 bg-white text-slate-900 font-semibold">
                         </div>
                     </div>
-                    <p class="text-xs text-slate-600 mt-2 font-medium">
-                        <i class="fa-solid fa-hand-pointer mr-1 text-slate-500"></i>
-                        Haga clic sobre el mapa a la derecha para posicionar el predio o arrastre el marcador dentro de Cali.
-                    </p>
                 </div>
 
                 <!-- Observaciones -->
@@ -260,7 +255,7 @@
                 <!-- Botón de Envío accesible (Mínimo 44px de altura) -->
                 <div class="pt-2">
                     <button type="submit" :disabled="guardando || !tieneCoordenadas"
-                        class="w-full min-h-[44px] py-3 px-4 rounded-lg font-bold text-xs text-white bg-emerald-700 hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 shadow-sm transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2">
+                        class="w-full min-h-11 py-3 px-4 rounded-lg font-bold text-xs text-white bg-emerald-700 hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 shadow-sm transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2">
                         <span x-show="!guardando" class="flex items-center">
                             <i class="fa-solid fa-stamp mr-2 text-sm"></i>
                             Radicar Solicitud
@@ -275,7 +270,7 @@
 
         <!-- Columna Derecha: Mapa Interactivo Leaflet -->
         <div class="lg:col-span-7 space-y-4">
-            
+
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-3 border-b border-slate-100 gap-2">
                     <div class="flex items-center space-x-2">
@@ -286,12 +281,12 @@
                     <!-- Controles Rápidos del Mapa con altura accesible -->
                     <div class="flex items-center space-x-2">
                         <button type="button" @click="centrarEnCali()" title="Centrar mapa en la ciudad"
-                            class="min-h-[38px] px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 transition flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-cali-blue">
+                            class="min-h-9.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 transition flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-cali-blue">
                             <i class="fa-solid fa-crosshairs text-slate-600"></i>
                             <span class="hidden sm:inline">Centrar ciudad</span>
                         </button>
                         <button type="button" @click="centrarEnSede()" title="Centrar mapa en mi sede"
-                            class="min-h-[38px] px-3 py-1.5 text-xs font-semibold rounded-lg bg-cali-blue hover:bg-cali-darkblue text-white transition flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-cali-blue">
+                            class="min-h-9.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-cali-blue hover:bg-cali-darkblue text-white transition flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-cali-blue">
                             <i class="fa-solid fa-building"></i>
                             <span class="hidden sm:inline">Mi Sede</span>
                         </button>
@@ -307,7 +302,7 @@
                 </div>
 
                 <!-- Contenedor del Mapa Leaflet -->
-                <div id="mapaVentanilla" class="w-full h-[460px] rounded-lg border border-slate-300 shadow-inner z-10" aria-label="Mapa interactivo de radicación"></div>
+                <div id="mapaVentanilla" class="w-full h-[480px] min-h-[420px] rounded-lg border border-slate-300 shadow-inner z-10" style="height: 480px; min-height: 420px;" aria-label="Mapa interactivo de radicación"></div>
             </div>
 
             <!-- Tabla de Solicitudes Radicadas Recientemente en esta Sesión/Sede -->
@@ -343,7 +338,7 @@
                                         <span class="text-slate-500">/</span>
                                         <span class="text-slate-800 font-medium" x-text="item.barrio ? item.barrio.nombre : ''"></span>
                                     </td>
-                                    <td class="py-2.5 px-3 truncate max-w-[150px]" :title="item.direccion" x-text="item.direccion"></td>
+                                    <td class="py-2.5 px-3 truncate max-w-37.5" :title="item.direccion" x-text="item.direccion"></td>
                                     <td class="py-2.5 px-3 font-semibold text-rose-700">
                                         <span x-text="item.fecha_limite ? item.fecha_limite.substring(0, 10) : '+15 días'"></span>
                                     </td>
@@ -512,6 +507,12 @@ function ventanillaApp() {
                 attribution: '&copy; OpenStreetMap contributors | Alcaldía de Cali',
                 maxZoom: 19
             }).addTo(this.map);
+
+            setTimeout(() => {
+                if (this.map) {
+                    this.map.invalidateSize();
+                }
+            }, 250);
 
             // Icono de Sede Principal con Landmark institucional (R-04)
             const sedePrincipalIcon = L.divIcon({

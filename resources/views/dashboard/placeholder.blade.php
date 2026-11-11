@@ -12,7 +12,7 @@
          x-transition:leave="transition ease-in duration-300"
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0"
-         class="bg-slate-50 border-l-4 border-slate-600 rounded-r-xl p-4 mb-6 border border-slate-200 flex items-center justify-between"
+         class="bg-slate-50 border-l-4 border-slate-600 rounded-r-xl p-4 mb-6 border flex items-center justify-between"
          role="status">
         <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
             <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>

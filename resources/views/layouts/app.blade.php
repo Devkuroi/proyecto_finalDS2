@@ -40,6 +40,11 @@
     <style>
         [x-cloak] { display: none !important; }
         .leaflet-popup-content-wrapper { border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        #mapaVentanilla, #mapaBitacora {
+            height: 480px !important;
+            min-height: 420px !important;
+            width: 100% !important;
+        }
     </style>
     @stack('styles')
 </head>
@@ -48,7 +53,7 @@
     <!-- Barra Superior Institucional -->
     <header class="bg-cali-blue text-white shadow-sm z-30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between min-h-[4.25rem] py-2">
+            <div class="flex items-center justify-between min-h-17 py-2">
                 <!-- Marca -->
                 <div>
                     <div class="font-bold text-base sm:text-lg tracking-tight leading-tight">
@@ -75,7 +80,7 @@
                     <nav class="flex items-center space-x-1 sm:space-x-2" aria-label="Navegación principal">
                         @if(Auth::user()->esVentanilla() || Auth::user()->esAdministrador())
                             <a href="{{ route('ventanilla.index') }}"
-                               class="min-h-[44px] px-3.5 py-2 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white transition inline-flex items-center space-x-1.5 border border-white/15 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-cali-darkblue">
+                               class="min-h-11 px-3.5 py-2 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white transition inline-flex items-center space-x-1.5 border border-white/15 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-cali-darkblue">
                                 <i class="fa-solid fa-desktop"></i>
                                 <span class="hidden sm:inline">Ventanilla</span>
                             </a>
@@ -83,7 +88,7 @@
 
                         @if(Auth::user()->esEnrutador() || Auth::user()->esAdministrador())
                             <a href="{{ route('enrutador.bitacora') }}"
-                               class="min-h-[44px] px-3.5 py-2 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white transition inline-flex items-center space-x-1.5 border border-white/15 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-cali-darkblue">
+                               class="min-h-11 px-3.5 py-2 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white transition inline-flex items-center space-x-1.5 border border-white/15 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-cali-darkblue">
                                 <i class="fa-solid fa-route"></i>
                                 <span class="hidden sm:inline">Bitácora</span>
                             </a>
@@ -91,7 +96,7 @@
 
                         @if(Auth::user()->esAdministrador() || Auth::user()->esEncuestador() || Auth::user()->esCalidad())
                             <a href="{{ route('dashboard') }}"
-                               class="min-h-[44px] px-3.5 py-2 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white transition inline-flex items-center space-x-1.5 border border-white/15 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-cali-darkblue">
+                               class="min-h-11 px-3.5 py-2 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white transition inline-flex items-center space-x-1.5 border border-white/15 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-cali-darkblue">
                                 <i class="fa-solid fa-id-badge"></i>
                                 <span class="hidden sm:inline">Mi Panel</span>
                             </a>
@@ -103,7 +108,7 @@
                             <button type="submit"
                                     title="Cerrar Sesión"
                                     aria-label="Cerrar Sesión"
-                                    class="min-h-[44px] min-w-[44px] p-2 text-sky-100 hover:text-white hover:bg-red-600/80 rounded-lg transition inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-cali-darkblue">
+                                    class="min-h-11 min-w-11 p-2 text-sky-100 hover:text-white hover:bg-red-600/80 rounded-lg transition inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-cali-darkblue">
                                 <i class="fa-solid fa-right-from-bracket text-base"></i>
                             </button>
                         </form>

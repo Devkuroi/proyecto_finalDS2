@@ -89,7 +89,7 @@
 
                 <div class="pt-2">
                     <button type="submit" :disabled="cargando"
-                        class="w-full min-h-[44px] flex justify-center items-center space-x-2 py-3 px-4 rounded-lg shadow-sm text-sm font-bold text-white bg-cali-blue hover:bg-cali-darkblue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cali-blue transition duration-150">
+                        class="w-full min-h-11 flex justify-center items-center space-x-2 py-3 px-4 rounded-lg shadow-sm text-sm font-bold text-white bg-cali-blue hover:bg-cali-darkblue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cali-blue transition duration-150">
                         <span x-show="!cargando" class="flex items-center">
                             <i class="fa-solid fa-right-to-bracket mr-2"></i>Ingresar
                         </span>
@@ -103,7 +103,7 @@
             <!-- Botón para alternar a Modo Demo -->
             <div class="mt-6 pt-5 border-t border-slate-200">
                 <button type="button" @click="modoDemo = true"
-                    class="w-full min-h-[44px] py-2.5 px-4 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-300 transition flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-cali-blue">
+                    class="w-full min-h-11 py-2.5 px-4 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-300 transition flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-cali-blue">
                     <i class="fa-solid fa-id-card-clip text-cali-blue"></i>
                     <span>Ver perfiles de prueba (Modo Demostración)</span>
                 </button>
@@ -121,7 +121,7 @@
                     <span class="text-xs text-slate-400">Acceso rápido</span>
                 </div>
                 <button type="button" @click="modoDemo = false"
-                    class="min-h-[38px] px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition border border-slate-700 flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    class="min-h-9.5-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition border border-slate-700 flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-amber-400">
                     <i class="fa-solid fa-arrow-left"></i>
                     <span>Volver al formulario</span>
                 </button>
@@ -134,7 +134,7 @@
             <div class="space-y-2.5">
                 <!-- Ventanilla Principal -->
                 <button type="button" @click="setDemo('ventanilla17@cali.gov.co', 'Password123!', true)"
-                    class="w-full min-h-[44px] text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-emerald-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    class="w-full min-h-11 text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-emerald-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
                     <div class="flex items-center space-x-3">
                         <div class="w-8 h-8 rounded-md bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-sm">
                             <i class="fa-solid fa-desktop"></i>
@@ -151,7 +151,7 @@
 
                 <!-- Ventanilla Terrón Colorado -->
                 <button type="button" @click="setDemo('ventanilla1@cali.gov.co', 'Password123!', true)"
-                    class="w-full min-h-[44px] text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-emerald-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    class="w-full min-h-11 text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-emerald-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
                     <div class="flex items-center space-x-3">
                         <div class="w-8 h-8 rounded-md bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-sm">
                             <i class="fa-solid fa-location-dot"></i>
@@ -168,7 +168,7 @@
 
                 <!-- Enrutador -->
                 <button type="button" @click="setDemo('enrutador@cali.gov.co', 'Password123!', true)"
-                    class="w-full min-h-[44px] text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-sky-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    class="w-full min-h-11 text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-sky-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
                     <div class="flex items-center space-x-3">
                         <div class="w-8 h-8 rounded-md bg-sky-500/20 text-sky-300 flex items-center justify-center font-bold text-sm">
                             <i class="fa-solid fa-route"></i>
@@ -185,7 +185,7 @@
 
                 <!-- Administrador -->
                 <button type="button" @click="setDemo('admin@cali.gov.co', 'Password123!', true)"
-                    class="w-full min-h-[44px] text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-indigo-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    class="w-full min-h-11 text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-indigo-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
                     <div class="flex items-center space-x-3">
                         <div class="w-8 h-8 rounded-md bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold text-sm">
                             <i class="fa-solid fa-user-gear"></i>
@@ -202,7 +202,7 @@
 
                 <!-- Encuestador -->
                 <button type="button" @click="setDemo('encuestador1@cali.gov.co', 'Password123!', true)"
-                    class="w-full min-h-[44px] text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-teal-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    class="w-full min-h-11 text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-teal-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
                     <div class="flex items-center space-x-3">
                         <div class="w-8 h-8 rounded-md bg-teal-500/20 text-teal-300 flex items-center justify-center font-bold text-sm">
                             <i class="fa-solid fa-clipboard-user"></i>
@@ -219,7 +219,7 @@
 
                 <!-- Calidad -->
                 <button type="button" @click="setDemo('calidad@cali.gov.co', 'Password123!', true)"
-                    class="w-full min-h-[44px] text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-purple-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    class="w-full min-h-11 text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-purple-500 transition flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-amber-400">
                     <div class="flex items-center space-x-3">
                         <div class="w-8 h-8 rounded-md bg-purple-500/20 text-purple-300 flex items-center justify-center font-bold text-sm">
                             <i class="fa-solid fa-award"></i>
@@ -242,7 +242,7 @@
 
             <div class="mt-4">
                 <button type="button" @click="modoDemo = false"
-                    class="w-full min-h-[40px] py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 hover:text-white transition text-center border border-slate-700">
+                    class="w-full min-h-10 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 hover:text-white transition text-center border border-slate-700">
                     Volver al formulario
                 </button>
             </div>

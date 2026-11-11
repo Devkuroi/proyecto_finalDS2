@@ -28,11 +28,11 @@ class DatabaseSeeder extends Seeder
 
         // 1. Roles Institucionales (5 perfiles exigidos)
         $roles = [
-            ['id' => 1, 'nombre' => 'ADMINISTRADOR', 'descripcion' => 'Administrador general del sistema institucional y control maestro', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 2, 'nombre' => 'VENTANILLA', 'descripcion' => 'Operador de atención al ciudadano y radicación georreferenciada en sede', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 3, 'nombre' => 'ENCUESTADOR', 'descripcion' => 'Personal operativo de campo para levantamiento de encuestas domiciliarias', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 4, 'nombre' => 'CALIDAD', 'descripcion' => 'Auditor de calidad y verificación metodológica de encuestas', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 5, 'nombre' => 'ENRUTADOR', 'descripcion' => 'Coordinador logístico de bitácora diaria y consolidación territorial', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 1, 'nombre' => 'ADMINISTRADOR', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 2, 'nombre' => 'VENTANILLA', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 3, 'nombre' => 'ENCUESTADOR', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 4, 'nombre' => 'CALIDAD', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 5, 'nombre' => 'ENRUTADOR', 'created_at' => now(), 'updated_at' => now()],
         ];
         DB::table('roles')->insert($roles);
 
