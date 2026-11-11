@@ -31,7 +31,7 @@
                     </div>
                     <div>
                         <h1 class="text-xl font-bold text-slate-900">Iniciar Sesión</h1>
-                        <p class="text-xs text-slate-600 font-medium">Módulo de Autenticación de Perfiles (Requerimiento 1)</p>
+                        <p class="text-xs text-slate-600 font-medium">Sistema de Encuestas Domiciliarias</p>
                     </div>
                 </div>
 
@@ -85,7 +85,7 @@
                             <input type="checkbox" name="remember" class="rounded border-slate-300 text-cali-blue focus:ring-cali-blue mr-2 h-4 w-4">
                             Recordar sesión en este equipo
                         </label>
-                        <span class="text-slate-600 font-medium">Entrega 1 • Santiago de Cali</span>
+                        <span class="text-slate-600 font-medium">Santiago de Cali</span>
                     </div>
 
                     <div class="pt-2">
@@ -134,9 +134,8 @@
                                 <i class="fa-solid fa-desktop"></i>
                             </div>
                             <div>
-                                <div class="text-xs font-bold text-white group-hover:text-emerald-300 flex items-center space-x-1.5">
+                                <div class="text-xs font-bold text-white group-hover:text-emerald-300">
                                     <span>VENTANILLA (Comuna 17 - Principal)</span>
-                                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded-md font-semibold">Req 2 & 3</span>
                                 </div>
                                 <div class="text-[11px] text-slate-300 font-mono">ventanilla17@cali.gov.co</div>
                             </div>
@@ -169,9 +168,8 @@
                                 <i class="fa-solid fa-route"></i>
                             </div>
                             <div>
-                                <div class="text-xs font-bold text-white group-hover:text-sky-300 flex items-center space-x-1.5">
+                                <div class="text-xs font-bold text-white group-hover:text-sky-300">
                                     <span>ENRUTADOR (Bitácora Diaria)</span>
-                                    <span class="text-[10px] bg-sky-500/20 text-sky-300 px-1.5 py-0.5 rounded-md font-semibold">Req 4</span>
                                 </div>
                                 <div class="text-[11px] text-slate-300 font-mono">enrutador@cali.gov.co</div>
                             </div>

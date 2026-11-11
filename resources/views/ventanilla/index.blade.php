@@ -17,9 +17,6 @@
             <div>
                 <div class="flex items-center space-x-2">
                     <h1 class="text-xl font-bold text-slate-900">Módulo de Radicación en Ventanilla</h1>
-                    <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                        Req 2 & 3 Activo
-                    </span>
                 </div>
                 <p class="text-xs text-slate-600 font-medium mt-0.5">
                     Operador: <strong class="text-slate-800">{{ $usuario->nombre }}</strong> •
@@ -52,7 +49,7 @@
                 <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 mx-auto flex items-center justify-center text-2xl mb-3">
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
-                <h3 id="modalTitulo" class="text-lg font-bold text-slate-900">¡Solicitud Radicada con Éxito!</h3>
+                <div id="modalTitulo" class="text-lg font-bold text-slate-900">Solicitud Radicada</div>
                 <p class="text-xs text-slate-600 mt-1">El predio ha sido georreferenciado e indexado en la bitácora institucional.</p>
 
                 <!-- Detalle del Radicado -->
@@ -103,10 +100,7 @@
         <!-- Columna Izquierda: Formulario de Radicación con Selectores Dependientes (Req 2 & 3) -->
         <div class="lg:col-span-5 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-file-signature text-cali-blue text-base"></i>
-                    <h2 class="text-base font-bold text-slate-900">Formulario de Solicitud</h2>
-                </div>
+                <span class="text-sm font-semibold text-slate-800">Datos de la solicitud</span>
                 <span class="text-xs text-slate-600 font-semibold">* Campos obligatorios</span>
             </div>
 
@@ -225,7 +219,7 @@
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs font-bold text-cali-blue flex items-center">
                             <i class="fa-solid fa-location-crosshairs mr-1.5 text-cali-blue"></i>
-                            Georreferenciación en Cali (Requisito 3)
+                            Ubicación geográfica
                         </span>
                         <span class="text-[11px] px-2 py-0.5 rounded-md font-bold"
                               :class="tieneCoordenadas ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-amber-100 text-amber-900 border border-amber-300'"
@@ -283,10 +277,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-3 border-b border-slate-100 gap-2">
                     <div class="flex items-center space-x-2">
                         <i class="fa-solid fa-map-location-dot text-cali-blue text-base"></i>
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900">Georreferenciador Territorial de Cali</h2>
-                            <span class="text-xs text-slate-600 font-medium">Centrado en coordenadas oficiales [3.4516, -76.5320]</span>
-                        </div>
+                        <span class="text-sm font-semibold text-slate-800">Mapa</span>
                     </div>
 
                     <!-- Controles Rápidos del Mapa con altura accesible -->
@@ -321,9 +312,7 @@
                 <div class="flex items-center justify-between mb-3">
                     <div class="flex items-center space-x-2">
                         <i class="fa-solid fa-list-check text-cali-blue"></i>
-                        <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                            Últimas Solicitudes Radicadas en Esta Sede (Hoy)
-                        </h3>
+                        <span class="text-xs font-semibold text-slate-700">Solicitudes del día</span>
                     </div>
                     <span class="text-xs font-bold text-cali-blue bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200"
                           x-text="solicitudesRecientes.length + ' registradas'"></span>

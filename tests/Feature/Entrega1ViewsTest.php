@@ -30,7 +30,7 @@ class Entrega1ViewsTest extends TestCase
         $response = $this->actingAs($userVentanilla)->get('/ventanilla');
         $response->assertStatus(200);
         $response->assertSee('Módulo de Radicación en Ventanilla');
-        $response->assertSee('Georreferenciador Territorial de Cali');
+        $response->assertSee('mapaVentanilla');
     }
 
     public function test_vista_bitacora_se_renderiza_para_enrutador(): void
@@ -39,7 +39,7 @@ class Entrega1ViewsTest extends TestCase
         $response = $this->actingAs($userEnrutador)->get('/enrutador/bitacora');
         $response->assertStatus(200);
         $response->assertSee('Bitácora Diaria del Enrutador');
-        $response->assertSee('Mapa de Consolidación Territorial Diaria');
+        $response->assertSee('mapaBitacora');
     }
 
     public function test_vistas_placeholder_se_renderizan_para_encuestador_calidad_admin(): void

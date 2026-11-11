@@ -46,21 +46,15 @@
 <body class="h-full flex flex-col font-sans text-slate-800 antialiased">
 
     <!-- Barra Superior Institucional -->
-    <header class="bg-gradient-to-r from-cali-darkblue via-cali-blue to-sky-900 text-white shadow-sm z-30">
+    <header class="bg-cali-blue text-white shadow-sm z-30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between min-h-[4.25rem] py-2">
-                <!-- Marca / Logo -->
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/20 text-cali-gold text-lg">
-                        <i class="fa-solid fa-landmark"></i>
+                <!-- Marca -->
+                <div>
+                    <div class="font-bold text-base sm:text-lg tracking-tight leading-tight">
+                        <span>SISTEMA DE ENCUESTAS CALI</span>
                     </div>
-                    <div>
-                        <div class="font-bold text-base sm:text-lg tracking-tight leading-tight flex items-center space-x-2">
-                            <span>SISTEMA DE ENCUESTAS CALI</span>
-                            <span class="bg-amber-400 text-slate-900 text-[11px] px-2 py-0.5 rounded-md font-extrabold uppercase tracking-wider">Entrega 1</span>
-                        </div>
-                        <div class="text-xs text-sky-100">Santiago de Cali • Alcaldía Distrital • Zonas Urbanas y Rurales</div>
-                    </div>
+                    <div class="text-xs text-sky-100">Santiago de Cali • Alcaldía Distrital • Zonas Urbanas y Rurales</div>
                 </div>
 
                 <!-- Usuario Autenticado / Sesión -->
@@ -149,18 +143,16 @@
         @yield('content')
     </main>
 
-    <!-- Footer Institucional con alto contraste -->
+    <!-- Footer Institucional -->
     <footer class="bg-slate-900 text-slate-300 text-xs py-4 border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
             <div class="flex items-center space-x-2">
                 <span class="font-bold text-white">Santiago de Cali</span>
                 <span>•</span>
-                <span class="text-slate-300">Gestión de Encuestas Domiciliarias (Comunas 1-22 y 15 Corregimientos)</span>
+                <span class="text-slate-300">Alcaldía Distrital</span>
             </div>
-            <div class="flex items-center space-x-4 text-slate-300">
-                <span>Alcance: <strong class="text-amber-400">Entrega 1 (Req 1, 2, 3, 4 + Sedes Req 5)</strong></span>
-                <span>•</span>
-                <span>PHP 8.2+ / Laravel / MySQL / Leaflet.js</span>
+            <div class="text-slate-400">
+                <span>Gestión de Encuestas Domiciliarias</span>
             </div>
         </div>
     </footer>

@@ -36,22 +36,22 @@
                         <span><i class="fa-solid fa-building mr-1 text-slate-500"></i>{{ $usuario->puntoAtencion ? $usuario->puntoAtencion->nombre : 'Oficina Central de Cali' }}</span>
                         <span class="inline-flex items-center text-emerald-700 font-bold">
                             <span class="w-2 h-2 rounded-full bg-emerald-600 mr-1.5"></span>
-                            Sesión Autenticada y Activa (Req 1 OK)
+                            Sesión activa
                         </span>
                     </div>
                 </div>
             </div>
 
-            <!-- Accesos de navegación si es administrador con altura táctil accesible (44px) -->
+            <!-- Accesos de navegación si es administrador -->
             @if($rolNombre === 'ADMINISTRADOR')
             <div class="flex flex-wrap gap-2">
                 <a href="{{ route('ventanilla.index') }}" class="min-h-[44px] px-4 py-2.5 rounded-lg bg-cali-blue hover:bg-cali-darkblue text-white text-xs font-bold transition shadow-sm inline-flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-amber-400">
                     <i class="fa-solid fa-desktop"></i>
-                    <span>Ir a Ventanilla (Req 2 & 3)</span>
+                    <span>Ventanilla</span>
                 </a>
                 <a href="{{ route('enrutador.bitacora') }}" class="min-h-[44px] px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition shadow-sm inline-flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-amber-400">
                     <i class="fa-solid fa-route"></i>
-                    <span>Ir a Bitácora (Req 4)</span>
+                    <span>Bitácora</span>
                 </a>
             </div>
             @endif
@@ -59,33 +59,23 @@
         </div>
     </div>
 
-    <!-- Banner Informativo del Alcance de Entrega 1 vs Sprint 2 -->
-    <div class="bg-amber-50 border-l-4 border-amber-600 rounded-r-xl p-5 mb-6 border border-amber-200">
-        <div class="flex items-start space-x-3">
-            <i class="fa-solid fa-circle-exclamation text-amber-700 text-lg mt-0.5"></i>
-            <div>
-                <h2 class="text-sm font-bold text-slate-900">
-                    Aviso Institucional de Alcance de la Entrega 1 (Guardrail Estricto)
-                </h2>
-                <p class="text-xs text-slate-700 mt-1 leading-relaxed font-medium">
-                    Usted ha iniciado sesión exitosamente demostrando que el <strong>Requerimiento 1 (Autenticación de los 5 roles)</strong> está completado y validado.
-                    Conforme a las restricciones académicas de alcance, las funcionalidades operativas de campo, auditoría avanzada y hojas de ruta corresponden al <strong>Sprint 2</strong> y no deben programarse en esta entrega.
-                </p>
-            </div>
-        </div>
+    <!-- Mensaje del perfil -->
+    <div class="bg-slate-50 border-l-4 border-slate-600 rounded-r-xl p-4 mb-6 border border-slate-200">
+        <p class="text-xs text-slate-700 leading-relaxed font-medium">
+            Módulo en desarrollo para el perfil actual. Las opciones operativas estarán disponibles en la siguiente fase (Sprint 2).
+        </p>
     </div>
 
-    <!-- Módulos Planificados para el Sprint 2 para este Rol -->
+    <!-- Módulos Planificados para este Rol -->
     <div class="mb-6">
         <div class="flex items-center justify-between mb-4">
             <div>
-                <h3 class="text-base font-bold text-slate-900">
-                    Módulos Asignados para Habilitación en Sprint 2 (Product Backlog)
-                </h3>
-                <p class="text-xs text-slate-600 font-medium">Funcionalidades planificadas en el tablero Scrum institucional</p>
+                <span class="text-sm font-bold text-slate-900">
+                    Módulos en planificación
+                </span>
             </div>
-            <span class="text-xs font-bold px-3 py-1 bg-slate-200 text-slate-800 rounded-md">
-                Sprint 2 (En Planificación)
+            <span class="text-xs font-semibold px-2.5 py-0.5 bg-slate-200 text-slate-700 rounded">
+                Sprint 2
             </span>
         </div>
 
@@ -122,12 +112,12 @@
         </div>
     </div>
 
-    <!-- Métricas del Sistema en Entrega 1 con alto contraste -->
+    <!-- Resumen del Sistema -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-        <h3 class="text-sm font-bold text-slate-900 mb-4 flex items-center space-x-2">
+        <div class="text-sm font-bold text-slate-900 mb-4 flex items-center space-x-2">
             <i class="fa-solid fa-chart-simple text-cali-blue"></i>
-            <span>Estado Global de la Infraestructura Institucional (Entrega 1)</span>
-        </h3>
+            <span>Resumen general</span>
+        </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
             <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">

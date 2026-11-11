@@ -16,9 +16,6 @@
             <div>
                 <div class="flex items-center space-x-2">
                     <h1 class="text-xl font-bold text-slate-900">Bitácora Diaria del Enrutador</h1>
-                    <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-sky-100 text-sky-900 border border-sky-300">
-                        Req 4 Activo
-                    </span>
                 </div>
                 <p class="text-xs text-slate-600 font-medium mt-0.5">
                     Coordinador Logístico: <strong class="text-slate-800">{{ $usuario->nombre }}</strong> •
@@ -163,10 +160,7 @@
             <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-map text-cali-blue text-base"></i>
-                    <div>
-                        <h2 class="text-sm font-bold text-slate-900">Mapa de Consolidación Territorial Diaria</h2>
-                        <span class="text-xs text-slate-600 font-medium">Visualización de todas las solicitudes radicadas hoy en Cali</span>
-                    </div>
+                    <span class="text-sm font-semibold text-slate-800">Mapa consolidado</span>
                 </div>
 
                 <!-- Leyenda del Mapa con Icono Landmark en Sede Principal -->
@@ -185,17 +179,9 @@
         <div class="lg:col-span-12 bg-white rounded-xl shadow-sm border border-slate-200 p-5">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-4 border-b border-slate-100 gap-2">
                 <div>
-                    <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                        Listado Maestro de Solicitudes del Día
-                    </h2>
                     <span class="text-xs text-slate-600 font-medium">
-                        Mostrando <strong x-text="solicitudesFiltradas.length"></strong> registros consolidados (Presione Enter o haga clic sobre una fila para ubicar en mapa)
+                        Mostrando <strong x-text="solicitudesFiltradas.length"></strong> registros
                     </span>
-                </div>
-
-                <div class="text-xs text-slate-600 font-medium">
-                    <i class="fa-solid fa-circle-info mr-1 text-sky-600"></i>
-                    Las solicitudes permanecen en estado <strong class="text-slate-800">RADICADA</strong> hasta el Sprint 2 (Hojas de Ruta).
                 </div>
             </div>
 
