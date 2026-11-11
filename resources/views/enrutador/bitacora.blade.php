@@ -291,7 +291,16 @@ function bitacoraApp() {
 
         initMapa() {
             const caliCenter = [3.4516, -76.5320];
-            this.mapa = L.map('mapaBitacora').setView(caliCenter, 12);
+            const boundsCali = L.latLngBounds(
+                [3.2950, -76.6600],
+                [3.5350, -76.4550]
+            );
+
+            this.mapa = L.map('mapaBitacora', {
+                maxBounds: boundsCali,
+                maxBoundsViscosity: 1.0,
+                minZoom: 11
+            }).setView(caliCenter, 12);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors | Alcaldía de Cali',

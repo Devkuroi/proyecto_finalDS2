@@ -204,14 +204,14 @@ class Entrega1BackendTest extends TestCase
     }
 
     /**
-     * Validación de Georreferenciación: Coordenadas fuera de Cali son rechazadas
+     * Validación de Georreferenciación: Coordenadas fuera de Cali o en municipios vecinos son rechazadas
      */
     public function test_ventanilla_rechaza_georreferenciacion_fuera_de_cali(): void
     {
         $userVentanilla = User::where('email', 'ventanilla17@cali.gov.co')->first();
 
-        // Coordenadas de Bogotá (Lat 4.7110, Lng -74.0721)
-        $payload = [
+        // 1. Coordenadas de Bogotá (Lat 4.7110, Lng -74.0721)
+        $payloadBogota = [
             'nombres_solicitante' => 'Pedro',
             'apellidos_solicitante' => 'Gómez',
             'celular' => '3151234567',
@@ -223,10 +223,50 @@ class Entrega1BackendTest extends TestCase
             'punto_atencion_id' => 1,
         ];
 
-        $response = $this->actingAs($userVentanilla)
-            ->postJson('/api/solicitudes', $payload);
+        $responseBogota = $this->actingAs($userVentanilla)
+            ->postJson('/api/solicitudes', $payloadBogota);
 
-        $response->assertStatus(422)
+        $responseBogota->assertStatus(422)
+            ->assertJsonValidationErrors(['latitud', 'longitud']);
+
+        // 2. Coordenadas de Jamundí (Lat 3.2605 < 3.3000, rechazada por latitud fuera de Cali)
+        $payloadJamundi = array_merge($payloadBogota, [
+            'latitud' => 3.2605,
+            'longitud' => -76.5414,
+        ]);
+        $responseJamundi = $this->actingAs($userVentanilla)
+            ->postJson('/api/solicitudes', $payloadJamundi);
+        $responseJamundi->assertStatus(422)
+            ->assertJsonValidationErrors(['latitud']);
+
+        // 3. Coordenadas de Yumbo Centro (Lat 3.5820 > 3.5300, rechazada por latitud fuera de Cali)
+        $payloadYumbo = array_merge($payloadBogota, [
+            'latitud' => 3.5820,
+            'longitud' => -76.4950,
+        ]);
+        $responseYumbo = $this->actingAs($userVentanilla)
+            ->postJson('/api/solicitudes', $payloadYumbo);
+        $responseYumbo->assertStatus(422)
+            ->assertJsonValidationErrors(['latitud']);
+
+        // 4. Coordenadas de Palmira Centro (Lat 3.5390, Lng -76.3030, rechazada por latitud y longitud)
+        $payloadPalmira = array_merge($payloadBogota, [
+            'latitud' => 3.5390,
+            'longitud' => -76.3030,
+        ]);
+        $responsePalmira = $this->actingAs($userVentanilla)
+            ->postJson('/api/solicitudes', $payloadPalmira);
+        $responsePalmira->assertStatus(422)
+            ->assertJsonValidationErrors(['latitud', 'longitud']);
+
+        // 5. Coordenadas de Acopi/Yumbo (Lat 3.518, Lng -76.518, filtro de exclusión de municipio vecino)
+        $payloadAcopi = array_merge($payloadBogota, [
+            'latitud' => 3.5180,
+            'longitud' => -76.5180,
+        ]);
+        $responseAcopi = $this->actingAs($userVentanilla)
+            ->postJson('/api/solicitudes', $payloadAcopi);
+        $responseAcopi->assertStatus(422)
             ->assertJsonValidationErrors(['latitud', 'longitud']);
     }
 

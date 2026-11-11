@@ -414,7 +414,24 @@ function ventanillaApp() {
         },
 
         esCoordenadaEnCali(lat, lng) {
-            return lat >= 3.20000000 && lat <= 3.53000000 && lng >= -76.65000000 && lng <= -76.45000000;
+            if (!lat || !lng) return false;
+            // 1. Marco delimitador estricto de Santiago de Cali
+            if (lat < 3.30000000 || lat > 3.53000000 || lng < -76.65000000 || lng > -76.46500000) {
+                return false;
+            }
+            // 2. Exclusión de Jamundí / Puerto Tejada (Suroriente y sur del Río Jamundí)
+            if (lat < 3.31200000 && lng > -76.54000000) {
+                return false;
+            }
+            // 3. Exclusión de Yumbo (Zona norte industrial/urbana por encima de Menga y Paso del Comercio)
+            if (lat > 3.50000000 && lng > -76.53500000) {
+                return false;
+            }
+            // 4. Exclusión de Candelaria / Palmira (Oriente del Río Cauca)
+            if (lng > -76.46800000 && lat < 3.48000000) {
+                return false;
+            }
+            return true;
         },
 
         get tieneCoordenadas() {
@@ -433,7 +450,10 @@ function ventanillaApp() {
                 'bogota', 'bogotá', 'medellin', 'medellín', 'barranquilla', 'bucaramanga',
                 'cartagena', 'pereira', 'manizales', 'pasto', 'popayan', 'popayán',
                 'yumbo', 'jamundi', 'jamundí', 'palmira', 'candelaria', 'buenaventura',
-                'tulua', 'tuluá', 'buga', 'cartago'
+                'tulua', 'tuluá', 'buga', 'cartago', 'armenia', 'ibague', 'ibagué',
+                'cúcuta', 'cucuta', 'valledupar', 'villavicencio', 'santa marta',
+                'puerto tejada', 'puertotejada', 'villagorgona', 'poblado campestre',
+                'acopi', 'arroyohondo', 'dagua', 'la cumbre', 'vijes', 'pradera', 'florida'
             ];
 
             for (const ciudad of ciudadesProhibidas) {
@@ -456,6 +476,33 @@ function ventanillaApp() {
             return true;
         },
 
+        async verificarMunicipioOSM(lat, lng) {
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`);
+                const data = await res.json();
+                if (data && data.address) {
+                    const addr = data.address;
+                    const mun = (addr.town || addr.city || addr.municipality || addr.county || '').toLowerCase();
+                    const ajenos = ['jamundi', 'jamundí', 'yumbo', 'palmira', 'candelaria', 'puerto tejada', 'dagua', 'la cumbre', 'vijes', 'pradera', 'florida'];
+                    for (const ajeno of ajenos) {
+                        if (mun.includes(ajeno) || (data.display_name && data.display_name.toLowerCase().includes(ajeno))) {
+                            this.errorUbicacion = `La ubicación seleccionada pertenece al municipio de ${addr.town || addr.city || ajeno.toUpperCase()} y no a Santiago de Cali.`;
+                            this.form.latitud = null;
+                            this.form.longitud = null;
+                            if (this.predioMarker) {
+                                this.map.removeLayer(this.predioMarker);
+                                this.predioMarker = null;
+                            }
+                            return false;
+                        }
+                    }
+                }
+            } catch (e) {
+                // Si la red externa no responde, el filtro geométrico local garantiza el perímetro
+            }
+            return true;
+        },
+
         async buscarDireccionEnMapa() {
             if (!this.validarDireccion()) return;
             this.buscandoDireccion = true;
@@ -463,26 +510,43 @@ function ventanillaApp() {
 
             try {
                 const query = encodeURIComponent(this.form.direccion + ', Cali, Valle del Cauca, Colombia');
-                const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&viewbox=-76.65,3.53,-76.45,3.20&bounded=1`);
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=3&addressdetails=1&viewbox=-76.65,3.53,-76.465,3.30&bounded=1`);
                 const data = await res.json();
 
                 if (data && data.length > 0) {
-                    const lat = parseFloat(parseFloat(data[0].lat).toFixed(8));
-                    const lng = parseFloat(parseFloat(data[0].lon).toFixed(8));
+                    let itemValido = null;
+                    const municipiosAjenos = ['jamundi', 'jamundí', 'yumbo', 'palmira', 'candelaria', 'puerto tejada', 'dagua', 'la cumbre', 'vijes', 'pradera', 'florida'];
 
-                    if (this.esCoordenadaEnCali(lat, lng)) {
-                        this.form.latitud = lat;
-                        this.form.longitud = lng;
-                        this.actualizarMarcadorPredio(lat, lng);
-                        this.map.setView([lat, lng], 16);
+                    for (const item of data) {
+                        const addr = item.address || {};
+                        const munDetectado = (addr.town || addr.city || addr.municipality || addr.county || '').toLowerCase();
+                        const esAjeno = municipiosAjenos.some(m => munDetectado.includes(m) || (item.display_name && item.display_name.toLowerCase().includes(m)));
+
+                        const lat = parseFloat(parseFloat(item.lat).toFixed(8));
+                        const lng = parseFloat(parseFloat(item.lon).toFixed(8));
+
+                        if (!esAjeno && this.esCoordenadaEnCali(lat, lng)) {
+                            itemValido = { lat, lng };
+                            break;
+                        }
+                    }
+
+                    if (itemValido) {
+                        this.form.latitud = itemValido.lat;
+                        this.form.longitud = itemValido.lng;
+                        this.actualizarMarcadorPredio(itemValido.lat, itemValido.lng);
+                        this.map.setView([itemValido.lat, itemValido.lng], 16);
                         this.direccionVerificada = true;
                         this.errorUbicacion = null;
+                        this.errorDireccion = null;
                     } else {
-                        this.errorUbicacion = 'La dirección se localizó fuera del perímetro de Cali.';
+                        this.direccionVerificada = false;
+                        this.errorUbicacion = 'La dirección se localizó fuera del perímetro de Santiago de Cali (municipio vecino no permitido).';
+                        this.errorDireccion = 'La dirección no pertenece al perímetro urbano ni rural de Santiago de Cali.';
                     }
                 } else {
                     this.direccionVerificada = false;
-                    this.errorDireccion = 'No se encontró la dirección exacta en el mapa de Cali. Por favor seleccione el punto en el mapa.';
+                    this.errorDireccion = 'No se encontró la dirección exacta en el mapa de Cali. Por favor seleccione el punto en el mapa de Cali.';
                 }
             } catch (err) {
                 // Si la red externa no responde, la validación sintáctica de Cali es suficiente
@@ -501,7 +565,16 @@ function ventanillaApp() {
 
         initMap() {
             const caliCenter = [3.4516, -76.5320];
-            this.map = L.map('mapaVentanilla').setView(caliCenter, 13);
+            const boundsCali = L.latLngBounds(
+                [3.2950, -76.6600], // Límite sur (frontera Pance con Jamundí)
+                [3.5350, -76.4550]  // Límite norte / oriente (frontera con Yumbo y Palmira)
+            );
+
+            this.map = L.map('mapaVentanilla', {
+                maxBounds: boundsCali,
+                maxBoundsViscosity: 1.0,
+                minZoom: 11
+            }).setView(caliCenter, 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors | Alcaldía de Cali',
@@ -547,12 +620,12 @@ function ventanillaApp() {
 
             this.actualizarMarcadorPredio(this.form.latitud, this.form.longitud);
 
-            this.map.on('click', (e) => {
+            this.map.on('click', async (e) => {
                 const lat = parseFloat(e.latlng.lat.toFixed(8));
                 const lng = parseFloat(e.latlng.lng.toFixed(8));
 
                 if (!this.esCoordenadaEnCali(lat, lng)) {
-                    this.errorUbicacion = 'La ubicación seleccionada está fuera de Santiago de Cali. Solo se permite georreferenciar predios dentro de Cali.';
+                    this.errorUbicacion = 'La ubicación seleccionada está fuera de Santiago de Cali (municipio vecino no permitido). Solo se permite georreferenciar predios dentro de Cali.';
                     return;
                 }
 
@@ -560,6 +633,7 @@ function ventanillaApp() {
                 this.form.latitud = lat;
                 this.form.longitud = lng;
                 this.actualizarMarcadorPredio(lat, lng);
+                await this.verificarMunicipioOSM(lat, lng);
             });
         },
 
@@ -579,20 +653,23 @@ function ventanillaApp() {
                     draggable: true
                 }).addTo(this.map);
 
-                this.predioMarker.on('dragend', (event) => {
+                this.predioMarker.on('dragend', async (event) => {
                     const position = event.target.getLatLng();
                     const nLat = parseFloat(position.lat.toFixed(8));
                     const nLng = parseFloat(position.lng.toFixed(8));
 
                     if (!this.esCoordenadaEnCali(nLat, nLng)) {
                         this.errorUbicacion = 'La ubicación arrastrada está fuera de Santiago de Cali. Solo se permite georreferenciar predios dentro de Cali.';
-                        this.predioMarker.setLatLng([this.form.latitud, this.form.longitud]);
+                        if (this.form.latitud && this.form.longitud) {
+                            this.predioMarker.setLatLng([this.form.latitud, this.form.longitud]);
+                        }
                         return;
                     }
 
                     this.errorUbicacion = null;
                     this.form.latitud = nLat;
                     this.form.longitud = nLng;
+                    await this.verificarMunicipioOSM(nLat, nLng);
                 });
             }
 

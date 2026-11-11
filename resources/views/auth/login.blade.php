@@ -31,7 +31,6 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-slate-900">Iniciar Sesión</h1>
-                    <p class="text-xs text-slate-600 font-medium">Sistema de Encuestas Domiciliarias</p>
                 </div>
             </div>
 
@@ -112,20 +111,14 @@
 
         <!-- Panel 2: Modo Demostración (Oculta el Login Normal cuando está activo) -->
         <div x-show="modoDemo" x-cloak class="bg-slate-900 text-white p-6 sm:p-7 rounded-xl shadow-sm border border-slate-700">
-            
+
             <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
                 <div class="flex items-center space-x-2">
                     <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-amber-400 text-slate-900">
                         <i class="fa-solid fa-id-card mr-1.5"></i> MODO DEMOSTRACIÓN
                     </span>
-                    <span class="text-xs text-slate-400">Acceso rápido</span>
                 </div>
             </div>
-
-            <p class="text-xs text-slate-300 mb-4 leading-relaxed">
-                Seleccione un perfil para acceder directamente con un solo clic:
-            </p>
-
             <div class="space-y-2.5">
                 <!-- Ventanilla Principal -->
                 <button type="button" @click="setDemo('ventanilla17@cali.gov.co', 'Password123!', true)"

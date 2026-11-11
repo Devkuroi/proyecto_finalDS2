@@ -56,8 +56,8 @@ class VentanillaController extends Controller
             'direccion' => ['required', 'string', 'min:5', 'max:255'],
             'comuna_corregimiento_id' => ['required', 'integer', 'exists:comunas_corregimientos,id'],
             'barrio_id' => ['required', 'integer', 'exists:barrios_veredas,id'],
-            'latitud' => ['required', 'numeric', 'between:3.20000000,3.53000000'],
-            'longitud' => ['required', 'numeric', 'between:-76.65000000,-76.45000000'],
+            'latitud' => ['required', 'numeric', 'between:3.30000000,3.53000000'],
+            'longitud' => ['required', 'numeric', 'between:-76.65000000,-76.46500000'],
             'punto_atencion_id' => ['required', 'integer', 'exists:puntos_atencion,id'],
             'observaciones' => ['nullable', 'string', 'max:1000'],
         ], [
@@ -74,6 +74,18 @@ class VentanillaController extends Controller
             'longitud.between' => 'La ubicación seleccionada está fuera de Santiago de Cali. Solo se permite georreferenciar predios dentro de Cali.',
             'punto_atencion_id.required' => 'El punto de atención institucional es obligatorio.',
         ]);
+
+        // Validación estricta de exclusividad geográfica en Santiago de Cali (evita otros municipios)
+        if (!self::esCoordenadaExclusivaCali((float)$validated['latitud'], (float)$validated['longitud'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'La ubicación seleccionada se encuentra fuera del Distrito de Santiago de Cali o en un municipio vecino no permitido (Jamundí, Yumbo, Palmira, Candelaria, Puerto Tejada).',
+                'errors' => [
+                    'latitud' => ['La coordenada corresponde a otro municipio fuera de Santiago de Cali.'],
+                    'longitud' => ['La coordenada corresponde a otro municipio fuera de Santiago de Cali.'],
+                ],
+            ], 422);
+        }
 
         // Validación estricta de que la dirección corresponda y exista en Cali
         $validacionDireccion = $this->validarDireccionCali($validated['direccion']);
@@ -214,7 +226,9 @@ class VentanillaController extends Controller
             'cartagena', 'pereira', 'manizales', 'pasto', 'popayan', 'popayán',
             'yumbo', 'jamundi', 'jamundí', 'palmira', 'candelaria', 'buenaventura',
             'tulua', 'tuluá', 'buga', 'cartago', 'armenia', 'ibague', 'ibagué',
-            'cúcuta', 'cucuta', 'valledupar', 'villavicencio', 'santa marta'
+            'cúcuta', 'cucuta', 'valledupar', 'villavicencio', 'santa marta',
+            'puerto tejada', 'puertotejada', 'villagorgona', 'poblado campestre',
+            'acopi', 'arroyohondo', 'dagua', 'la cumbre', 'vijes', 'pradera', 'florida'
         ];
 
         foreach ($municipiosAjenos as $mun) {
@@ -245,5 +259,34 @@ class VentanillaController extends Controller
             'valida' => true,
             'mensaje' => 'Dirección válida en Cali.',
         ];
+    }
+
+    /**
+     * Valida si las coordenadas geográficas caen estrictamente dentro del Distrito de Santiago de Cali
+     * y no en municipios limítrofes (Jamundí, Yumbo, Palmira, Candelaria, Puerto Tejada).
+     */
+    public static function esCoordenadaExclusivaCali(float $lat, float $lng): bool
+    {
+        // 1. Marco delimitador de Cali
+        if ($lat < 3.30000000 || $lat > 3.53000000 || $lng < -76.65000000 || $lng > -76.46500000) {
+            return false;
+        }
+
+        // 2. Filtro de exclusión de Jamundí / Puerto Tejada (Suroriente y sur del Río Jamundí/Cauca)
+        if ($lat < 3.31200000 && $lng > -76.54000000) {
+            return false;
+        }
+
+        // 3. Filtro de exclusión de Yumbo (Zona norte industrial y urbana por encima de Menga y Paso del Comercio)
+        if ($lat > 3.50000000 && $lng > -76.53500000) {
+            return false;
+        }
+
+        // 4. Filtro de exclusión de Candelaria / Palmira (Franja oriental al otro lado del Río Cauca)
+        if ($lng > -76.46800000 && $lat < 3.48000000) {
+            return false;
+        }
+
+        return true;
     }
 }
