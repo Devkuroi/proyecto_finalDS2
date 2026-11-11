@@ -19,7 +19,7 @@
                 </div>
                 <p class="text-xs text-slate-600 font-medium mt-0.5">
                     Coordinador Logístico: <strong class="text-slate-800">{{ $usuario->nombre }}</strong> •
-                    Consolidación de Solicitudes Diarias para Santiago de Cali (Zonas Urbanas y Rurales)
+                    Consolidación y seguimiento de solicitudes de encuestas
                 </p>
             </div>
         </div>
@@ -51,37 +51,37 @@
                 <i class="fa-solid fa-clipboard-list text-cali-blue"></i>
             </div>
             <div class="text-2xl font-black text-slate-900" x-text="metricas.total">0</div>
-            <div class="text-xs text-slate-600 font-medium mt-1">Todas las sedes consolidadas</div>
+            <div class="text-xs text-slate-600 font-medium mt-1">Consolidado general</div>
         </div>
 
-        <!-- Cobertura Urbana (Comunas 1-22) -->
+        <!-- Cobertura Urbana -->
         <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
             <div class="flex items-center justify-between text-slate-600 mb-1">
                 <span class="text-xs font-bold uppercase tracking-wider">Zona Urbana</span>
                 <i class="fa-solid fa-city text-emerald-700"></i>
             </div>
             <div class="text-2xl font-black text-emerald-700" x-text="metricas.urbanas">0</div>
-            <div class="text-xs text-slate-600 font-medium mt-1">Comunas 1 a 22</div>
+            <div class="text-xs text-slate-600 font-medium mt-1">Sector urbano</div>
         </div>
 
-        <!-- Cobertura Rural (15 Corregimientos) -->
+        <!-- Cobertura Rural -->
         <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
             <div class="flex items-center justify-between text-slate-600 mb-1">
                 <span class="text-xs font-bold uppercase tracking-wider">Zona Rural</span>
                 <i class="fa-solid fa-mountain-sun text-amber-700"></i>
             </div>
             <div class="text-2xl font-black text-amber-700" x-text="metricas.rurales">0</div>
-            <div class="text-xs text-slate-600 font-medium mt-1">Corregimientos de Cali</div>
+            <div class="text-xs text-slate-600 font-medium mt-1">Sector rural</div>
         </div>
 
-        <!-- Vigentes en Política (≤ 15 Días) -->
+        <!-- En Tiempo (≤ 15 Días) -->
         <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
             <div class="flex items-center justify-between text-slate-600 mb-1">
                 <span class="text-xs font-bold uppercase tracking-wider">En Tiempo</span>
                 <i class="fa-solid fa-clock text-sky-700"></i>
             </div>
             <div class="text-2xl font-black text-sky-700" x-text="metricas.vigentes">0</div>
-            <div class="text-xs text-slate-600 font-medium mt-1">Política 15 días activa</div>
+            <div class="text-xs text-slate-600 font-medium mt-1">Dentro del plazo</div>
         </div>
 
         <!-- Vencidas (> 15 Días) -->
@@ -91,7 +91,7 @@
                 <i class="fa-solid fa-triangle-exclamation text-rose-700"></i>
             </div>
             <div class="text-2xl font-black text-rose-700" x-text="metricas.vencidas">0</div>
-            <div class="text-xs text-slate-600 font-medium mt-1">> 15 días sin enrutar</div>
+            <div class="text-xs text-slate-600 font-medium mt-1">Fuera de plazo</div>
         </div>
 
     </div>
@@ -105,10 +105,10 @@
                 
                 <!-- Filtro por Punto de Atención (Sedes Oficiales) -->
                 <div>
-                    <label for="filtroSede" class="block text-xs font-bold text-slate-800 uppercase mb-1">Punto de Atención (Sede)</label>
+                    <label for="filtroSede" class="block text-xs font-bold text-slate-800 uppercase mb-1">Punto de Atención</label>
                     <select id="filtroSede" x-model="filtros.punto_atencion_id" @change="consultarBitacora()"
                         class="w-full text-xs rounded-lg border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-2 focus:ring-cali-blue text-slate-900">
-                        <option value="">-- Todos los Puntos de Atención (8 Sedes) --</option>
+                        <option value="">-- Todos los puntos de atención --</option>
                         @foreach($puntosAtencion as $pto)
                             <option value="{{ $pto->id }}">
                                 {{ $pto->nombre }} {{ $pto->es_principal ? '(Principal)' : '' }}
@@ -119,12 +119,12 @@
 
                 <!-- Filtro por Zona -->
                 <div>
-                    <label for="filtroZona" class="block text-xs font-bold text-slate-800 uppercase mb-1">Zona Geográfica</label>
+                    <label for="filtroZona" class="block text-xs font-bold text-slate-800 uppercase mb-1">Zona</label>
                     <select id="filtroZona" x-model="filtros.zona" @change="consultarBitacora()"
                         class="w-full text-xs rounded-lg border border-slate-300 px-3 py-2 bg-slate-50 focus:ring-2 focus:ring-cali-blue text-slate-900">
-                        <option value="">-- Urbana y Rural --</option>
-                        <option value="URBANA">Solo Zona Urbana (Comunas)</option>
-                        <option value="RURAL">Solo Zona Rural (Corregimientos)</option>
+                        <option value="">-- Todas las zonas --</option>
+                        <option value="URBANA">Zona urbana</option>
+                        <option value="RURAL">Zona rural</option>
                     </select>
                 </div>
 
@@ -143,19 +143,13 @@
 
             </div>
 
-            <!-- Resumen de Sedes en Línea -->
-            <div class="text-right border-t md:border-t-0 md:border-l border-slate-200 pt-3 md:pt-0 md:pl-4 text-xs">
-                <span class="text-slate-600 font-semibold">Sedes Oficiales Integradas:</span>
-                <div class="font-bold text-slate-900">Comunas 1, 6, 7, 13, 14, 17, 20 y 21</div>
-            </div>
-
         </div>
     </div>
 
     <!-- Sección de Mapa Consolidado y Tabla en Tiempo Real -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start mb-6">
 
-        <!-- Mapa Consolidado de la Bitácora (Santiago de Cali) -->
+        <!-- Mapa Consolidado de la Bitácora -->
         <div class="lg:col-span-12 bg-white rounded-xl shadow-sm border border-slate-200 p-4">
             <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
                 <div class="flex items-center space-x-2">
@@ -163,19 +157,19 @@
                     <span class="text-sm font-semibold text-slate-800">Mapa consolidado</span>
                 </div>
 
-                <!-- Leyenda del Mapa con Icono Landmark en Sede Principal -->
+                <!-- Leyenda del Mapa -->
                 <div class="hidden sm:flex items-center space-x-4 text-xs text-slate-700">
-                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-amber-500 mr-1.5 border border-white"></span>Sede Principal C17</span>
-                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-cali-blue mr-1.5 border border-white"></span>Sedes Zonales</span>
-                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-emerald-600 mr-1.5 border border-white"></span>Solicitud Vigente (1-15 días)</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-amber-500 mr-1.5 border border-white"></span>Sede Principal</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-cali-blue mr-1.5 border border-white"></span>Puntos de atención</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-emerald-600 mr-1.5 border border-white"></span>Solicitud en plazo</span>
                 </div>
             </div>
 
             <!-- Mapa Leaflet -->
-            <div id="mapaBitacora" class="w-full h-[400px] rounded-lg border border-slate-300 shadow-inner z-10" aria-label="Mapa consolidado de solicitudes de encuestas en Cali"></div>
+            <div id="mapaBitacora" class="w-full h-[400px] rounded-lg border border-slate-300 shadow-inner z-10" aria-label="Mapa consolidado de solicitudes"></div>
         </div>
 
-        <!-- Tabla Detallada de la Bitácora Diaria (Accesible por Teclado: Tab, Enter, Space) -->
+        <!-- Tabla Detallada de la Bitácora Diaria -->
         <div class="lg:col-span-12 bg-white rounded-xl shadow-sm border border-slate-200 p-5">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-4 border-b border-slate-100 gap-2">
                 <div>
@@ -195,8 +189,8 @@
                             <th class="py-3 px-3">Teléfono</th>
                             <th class="py-3 px-3">Comuna / Corregimiento</th>
                             <th class="py-3 px-3">Barrio / Vereda</th>
-                            <th class="py-3 px-3">Dirección Predio</th>
-                            <th class="py-3 px-3">Sede de Radicación</th>
+                            <th class="py-3 px-3">Dirección</th>
+                            <th class="py-3 px-3">Punto de atención</th>
                             <th class="py-3 px-3 text-center">Días Restantes</th>
                             <th class="py-3 px-3 text-center">Estado</th>
                         </tr>
@@ -329,7 +323,7 @@ function bitacoraApp() {
                             <strong class="text-cali-blue block font-bold text-sm">${pto.nombre}</strong>
                             <div class="text-slate-700 mt-1">${pto.direccion}</div>
                             <span class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold ${pto.es_principal ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-blue-100 text-blue-900 border border-blue-300'}">
-                                ${pto.es_principal ? 'Sede Principal C17 (Oficina Central)' : 'Punto de Atención Comuna ' + pto.comuna_numero}
+                                ${pto.es_principal ? 'Sede Principal' : 'Punto de Atención Comuna ' + pto.comuna_numero}
                             </span>
                         </div>
                     `);

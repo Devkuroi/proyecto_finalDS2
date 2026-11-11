@@ -25,12 +25,12 @@
             </div>
         </div>
 
-        <!-- Indicador de Política Institucional de 15 Días -->
-        <div class="flex items-center space-x-3 bg-amber-50 border border-amber-300 rounded-lg px-4 py-2.5">
-            <i class="fa-solid fa-clock text-amber-700 text-xl" aria-hidden="true"></i>
+        <!-- Indicador de Plazo -->
+        <div class="flex items-center space-x-3 bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5">
+            <i class="fa-solid fa-calendar-check text-cali-blue text-lg" aria-hidden="true"></i>
             <div class="text-xs">
-                <div class="font-bold text-amber-900">POLÍTICA INSTITUCIONAL DE 15 DÍAS</div>
-                <div class="text-amber-800 font-medium">Toda radicación calcula fecha límite estricta (+15 días calendario)</div>
+                <div class="font-bold text-slate-800">Plazo de atención</div>
+                <div class="text-slate-600">15 días calendario a partir de la fecha de radicación</div>
             </div>
         </div>
     </div>
@@ -50,7 +50,7 @@
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
                 <div id="modalTitulo" class="text-lg font-bold text-slate-900">Solicitud Radicada</div>
-                <p class="text-xs text-slate-600 mt-1">El predio ha sido georreferenciado e indexado en la bitácora institucional.</p>
+                <p class="text-xs text-slate-600 mt-1">La solicitud ha sido registrada exitosamente en el sistema.</p>
 
                 <!-- Detalle del Radicado -->
                 <div class="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-200 text-left space-y-2 text-xs">
@@ -75,8 +75,8 @@
                         <span class="font-mono font-semibold text-slate-800" x-text="ultimoRadicado.latitud + ', ' + ultimoRadicado.longitud"></span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-slate-600 font-medium">Fecha Límite (15 Días):</span>
-                        <span class="font-bold text-rose-700" x-text="ultimoRadicado.fecha_limite + ' (15 días restantes)'"></span>
+                        <span class="text-slate-600 font-medium">Fecha Límite:</span>
+                        <span class="font-bold text-slate-800" x-text="ultimoRadicado.fecha_limite"></span>
                     </div>
                     <div class="flex justify-between pt-1 border-t border-slate-200">
                         <span class="text-slate-600 font-medium">Estado Inicial:</span>
@@ -87,17 +87,17 @@
                 <div class="mt-5 flex space-x-3">
                     <button type="button" @click="modalExito = false"
                         class="w-full min-h-[44px] py-2.5 px-4 rounded-lg bg-cali-blue hover:bg-cali-darkblue text-white font-bold text-xs shadow-sm transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cali-blue">
-                        <i class="fa-solid fa-plus mr-1.5"></i> Radicar Siguiente Solicitud (Esc para cerrar)
+                        <i class="fa-solid fa-plus mr-1.5"></i> Radicar Siguiente Solicitud
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Sección Principal: Formulario RIA + Mapa Leaflet Interactivo de Cali -->
+    <!-- Sección Principal: Formulario + Mapa Leaflet -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-        <!-- Columna Izquierda: Formulario de Radicación con Selectores Dependientes (Req 2 & 3) -->
+        <!-- Columna Izquierda: Formulario de Radicación -->
         <div class="lg:col-span-5 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
                 <span class="text-sm font-semibold text-slate-800">Datos de la solicitud</span>
@@ -169,21 +169,21 @@
                         placeholder="Ej. Calle 13B # 85-10, Casa 2 / Km 12 Vía Vorágine">
                 </div>
 
-                <!-- Selectores Dependientes de Territorio (Cali: Comunas 1-22 y 15 Corregimientos) -->
+                <!-- Selectores de Territorio -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 bg-slate-50 rounded-lg border border-slate-200">
                     <div>
                         <label for="campoComuna" class="block text-xs font-bold text-slate-900 mb-1">
-                            1. Comuna / Corregimiento *
+                            Comuna o Corregimiento *
                         </label>
                         <select id="campoComuna" x-model="form.comuna_corregimiento_id" @change="cargarBarrios()" required
                             class="w-full text-xs rounded-lg border border-slate-300 px-3 py-2.5 bg-white focus:ring-2 focus:ring-cali-blue focus:border-cali-blue transition text-slate-900">
                             <option value="">-- Seleccione división --</option>
-                            <optgroup label="ZONA URBANA (Comunas 1 a 22)">
+                            <optgroup label="Zona urbana">
                                 <template x-for="c in comunasUrbanas" :key="c.id">
                                     <option :value="c.id" x-text="c.nombre"></option>
                                 </template>
                             </optgroup>
-                            <optgroup label="ZONA RURAL (Corregimientos de Cali)">
+                            <optgroup label="Zona rural">
                                 <template x-for="corr in corregimientosRurales" :key="corr.id">
                                     <option :value="corr.id" x-text="corr.nombre"></option>
                                 </template>
@@ -193,7 +193,7 @@
 
                     <div>
                         <label for="campoBarrio" class="block text-xs font-bold text-slate-900 mb-1 flex items-center justify-between">
-                            <span>2. Barrio / Vereda *</span>
+                            <span>Barrio o Vereda *</span>
                             <span x-show="cargandoBarrios" x-cloak class="text-[11px] text-cali-blue font-semibold">
                                 <i class="fa-solid fa-spinner fa-spin mr-1"></i> Cargando...
                             </span>
@@ -214,7 +214,7 @@
                     </div>
                 </div>
 
-                <!-- Georreferenciación Automática (Capturada desde el Mapa Leaflet) -->
+                <!-- Georreferenciación en Mapa -->
                 <div class="p-3.5 bg-blue-50/70 rounded-lg border border-blue-200">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs font-bold text-cali-blue flex items-center">
@@ -223,7 +223,7 @@
                         </span>
                         <span class="text-[11px] px-2 py-0.5 rounded-md font-bold"
                               :class="tieneCoordenadas ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-amber-100 text-amber-900 border border-amber-300'"
-                              x-text="tieneCoordenadas ? '✓ Coordenadas Capturadas' : '⚠ Haga clic en el mapa'"></span>
+                              x-text="tieneCoordenadas ? 'Ubicación seleccionada' : 'Seleccione en el mapa'"></span>
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
@@ -240,14 +240,14 @@
                     </div>
                     <p class="text-xs text-slate-600 mt-2 font-medium">
                         <i class="fa-solid fa-hand-pointer mr-1 text-slate-500"></i>
-                        Haga clic sobre el mapa a la derecha para posicionar el predio o arrastre el marcador para afinar.
+                        Haga clic sobre el mapa a la derecha para posicionar el predio o arrastre el marcador para ajustar.
                     </p>
                 </div>
 
                 <!-- Observaciones -->
                 <div>
                     <label for="campoObservaciones" class="block text-xs font-bold text-slate-800 mb-1">
-                        Observaciones Institucionales (Opcional)
+                        Observaciones (opcional)
                     </label>
                     <textarea id="campoObservaciones" x-model="form.observaciones" rows="2"
                         class="w-full text-xs rounded-lg border border-slate-300 px-3 py-2 focus:ring-2 focus:ring-cali-blue focus:border-cali-blue transition placeholder-slate-500 text-slate-900"
@@ -260,17 +260,17 @@
                         class="w-full min-h-[44px] py-3 px-4 rounded-lg font-bold text-xs text-white bg-emerald-700 hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 shadow-sm transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2">
                         <span x-show="!guardando" class="flex items-center">
                             <i class="fa-solid fa-stamp mr-2 text-sm"></i>
-                            Radicar Solicitud de Encuesta Domiciliaria
+                            Radicar Solicitud
                         </span>
                         <span x-show="guardando" x-cloak class="flex items-center">
-                            <i class="fa-solid fa-spinner fa-spin mr-2"></i> Radicando en Base de Datos...
+                            <i class="fa-solid fa-spinner fa-spin mr-2"></i> Guardando solicitud...
                         </span>
                     </button>
                 </div>
             </form>
         </div>
 
-        <!-- Columna Derecha: Mapa Interactivo Leaflet (Santiago de Cali) -->
+        <!-- Columna Derecha: Mapa Interactivo Leaflet -->
         <div class="lg:col-span-7 space-y-4">
             
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
@@ -282,12 +282,12 @@
 
                     <!-- Controles Rápidos del Mapa con altura accesible -->
                     <div class="flex items-center space-x-2">
-                        <button type="button" @click="centrarEnCali()" title="Centrar mapa en Cali"
+                        <button type="button" @click="centrarEnCali()" title="Centrar mapa en la ciudad"
                             class="min-h-[38px] px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 transition flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-cali-blue">
                             <i class="fa-solid fa-crosshairs text-slate-600"></i>
-                            <span class="hidden sm:inline">Centrar Cali</span>
+                            <span class="hidden sm:inline">Centrar ciudad</span>
                         </button>
-                        <button type="button" @click="centrarEnSede()" title="Centrar mapa en mi sede de radicación"
+                        <button type="button" @click="centrarEnSede()" title="Centrar mapa en mi sede"
                             class="min-h-[38px] px-3 py-1.5 text-xs font-semibold rounded-lg bg-cali-blue hover:bg-cali-darkblue text-white transition flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-cali-blue">
                             <i class="fa-solid fa-building"></i>
                             <span class="hidden sm:inline">Mi Sede</span>
@@ -295,16 +295,16 @@
                     </div>
                 </div>
 
-                <!-- Leyenda de Marcadores con Icono de Landmark en Sede Principal -->
+                <!-- Convenciones del mapa -->
                 <div class="flex flex-wrap items-center gap-3 text-xs text-slate-700 mb-3 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
                     <span class="font-bold text-slate-900">Convenciones:</span>
-                    <span class="inline-flex items-center"><span class="w-3 h-3 rounded-full bg-amber-500 mr-1.5 border border-white shadow-sm"></span>Sede Principal C17 (Oficina Central)</span>
-                    <span class="inline-flex items-center"><span class="w-3 h-3 rounded-full bg-cali-blue mr-1.5 border border-white shadow-sm"></span>Sedes Zonales (C1, 6, 7, 13, 14, 20, 21)</span>
-                    <span class="inline-flex items-center"><span class="w-3 h-3 rounded-full bg-rose-600 mr-1.5 border border-white shadow-sm"></span>Predio Seleccionado</span>
+                    <span class="inline-flex items-center"><span class="w-3 h-3 rounded-full bg-amber-500 mr-1.5 border border-white shadow-sm"></span>Sede Principal</span>
+                    <span class="inline-flex items-center"><span class="w-3 h-3 rounded-full bg-cali-blue mr-1.5 border border-white shadow-sm"></span>Puntos de atención</span>
+                    <span class="inline-flex items-center"><span class="w-3 h-3 rounded-full bg-rose-600 mr-1.5 border border-white shadow-sm"></span>Ubicación seleccionada</span>
                 </div>
 
                 <!-- Contenedor del Mapa Leaflet -->
-                <div id="mapaVentanilla" class="w-full h-[460px] rounded-lg border border-slate-300 shadow-inner z-10" aria-label="Mapa georreferenciador interactivo de Santiago de Cali"></div>
+                <div id="mapaVentanilla" class="w-full h-[460px] rounded-lg border border-slate-300 shadow-inner z-10" aria-label="Mapa interactivo de radicación"></div>
             </div>
 
             <!-- Tabla de Solicitudes Radicadas Recientemente en esta Sesión/Sede -->
@@ -456,7 +456,7 @@ function ventanillaApp() {
                         <div class="text-slate-700 mt-1"><i class="fa-solid fa-location-dot mr-1 text-slate-500"></i>${pto.direccion}</div>
                         <div class="text-slate-600 mt-0.5"><i class="fa-solid fa-phone mr-1 text-slate-500"></i>${pto.telefono || 'Sin teléfono'}</div>
                         <span class="inline-block mt-2 px-2 py-0.5 rounded text-[10px] font-bold ${pto.es_principal ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-blue-100 text-blue-900 border border-blue-300'}">
-                            ${pto.es_principal ? 'Sede Principal (Oficina Central)' : 'Punto de Atención Comuna ' + pto.comuna_numero}
+                            ${pto.es_principal ? 'Sede Principal' : 'Punto de Atención Comuna ' + pto.comuna_numero}
                         </span>
                     </div>
                 `);

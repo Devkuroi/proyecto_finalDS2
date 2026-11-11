@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
-    <!-- Tarjeta de Identidad y Sesión Autenticada (Demostración Req 1) -->
+    <!-- Tarjeta de Identidad y Sesión Autenticada -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
             
@@ -33,7 +33,7 @@
                     <div class="text-xs text-slate-700 font-medium mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1">
                         <span><i class="fa-solid fa-envelope mr-1 text-slate-500"></i>{{ $usuario->email }}</span>
                         <span><i class="fa-solid fa-id-card mr-1 text-slate-500"></i>CC: {{ $usuario->identificacion }}</span>
-                        <span><i class="fa-solid fa-building mr-1 text-slate-500"></i>{{ $usuario->puntoAtencion ? $usuario->puntoAtencion->nombre : 'Oficina Central de Cali' }}</span>
+                        <span><i class="fa-solid fa-building mr-1 text-slate-500"></i>{{ $usuario->puntoAtencion ? $usuario->puntoAtencion->nombre : 'Oficina Central' }}</span>
                         <span class="inline-flex items-center text-emerald-700 font-bold">
                             <span class="w-2 h-2 rounded-full bg-emerald-600 mr-1.5"></span>
                             Sesión activa
@@ -62,7 +62,7 @@
     <!-- Mensaje del perfil -->
     <div class="bg-slate-50 border-l-4 border-slate-600 rounded-r-xl p-4 mb-6 border border-slate-200">
         <p class="text-xs text-slate-700 leading-relaxed font-medium">
-            Módulo en desarrollo para el perfil actual. Las opciones operativas estarán disponibles en la siguiente fase (Sprint 2).
+            Bienvenido al sistema. Su sesión ha sido verificada correctamente. Los módulos específicos de su perfil se habilitarán en la siguiente fase operativa (Sprint 2).
         </p>
     </div>
 
@@ -104,8 +104,8 @@
                     <p class="text-xs text-slate-600 leading-relaxed font-medium">{{ $mod['desc'] }}</p>
                 </div>
                 <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
-                    <span>Estado en Jira:</span>
-                    <span class="font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">Sprint 2 Backlog</span>
+                    <span>Estado:</span>
+                    <span class="font-medium text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">En desarrollo</span>
                 </div>
             </div>
             @endforeach
@@ -123,7 +123,7 @@
             <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
                 <span class="text-xs text-slate-700 font-semibold block mb-1">Puntos de Atención Oficiales</span>
                 <span class="text-2xl font-black text-cali-blue">{{ $stats['total_sedes'] }} Sedes</span>
-                <span class="text-xs text-slate-600 block mt-0.5">C17 Principal + C1,6,7,13,14,20,21</span>
+                <span class="text-xs text-slate-600 block mt-0.5">Red de atención municipal</span>
             </div>
 
             <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
@@ -141,7 +141,7 @@
             <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
                 <span class="text-xs text-slate-700 font-semibold block mb-1">Total Solicitudes Registradas</span>
                 <span class="text-2xl font-black text-slate-900">{{ $stats['total_historico'] }}</span>
-                <span class="text-xs text-slate-600 block mt-0.5">Base de datos MySQL</span>
+                <span class="text-xs text-slate-600 block mt-0.5">Histórico acumulado</span>
             </div>
         </div>
     </div>

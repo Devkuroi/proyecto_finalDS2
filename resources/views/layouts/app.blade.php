@@ -52,9 +52,9 @@
                 <!-- Marca -->
                 <div>
                     <div class="font-bold text-base sm:text-lg tracking-tight leading-tight">
-                        <span>SISTEMA DE ENCUESTAS CALI</span>
+                        <span>SISTEMA DE GESTIÓN DE ENCUESTAS</span>
                     </div>
-                    <div class="text-xs text-sky-100">Santiago de Cali • Alcaldía Distrital • Zonas Urbanas y Rurales</div>
+                    <div class="text-xs text-sky-100">Alcaldía Distrital • Registro y Georreferenciación</div>
                 </div>
 
                 <!-- Usuario Autenticado / Sesión -->
@@ -85,7 +85,7 @@
                             <a href="{{ route('enrutador.bitacora') }}"
                                class="min-h-[44px] px-3.5 py-2 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white transition inline-flex items-center space-x-1.5 border border-white/15 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-cali-darkblue">
                                 <i class="fa-solid fa-route"></i>
-                                <span class="hidden sm:inline">Bitácora Enrutador</span>
+                                <span class="hidden sm:inline">Bitácora</span>
                             </a>
                         @endif
 
@@ -101,8 +101,8 @@
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
                             <button type="submit"
-                                    title="Cerrar Sesión Institucional"
-                                    aria-label="Cerrar Sesión Institucional"
+                                    title="Cerrar Sesión"
+                                    aria-label="Cerrar Sesión"
                                     class="min-h-[44px] min-w-[44px] p-2 text-sky-100 hover:text-white hover:bg-red-600/80 rounded-lg transition inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-cali-darkblue">
                                 <i class="fa-solid fa-right-from-bracket text-base"></i>
                             </button>
@@ -142,20 +142,6 @@
     <main class="flex-1 overflow-y-auto">
         @yield('content')
     </main>
-
-    <!-- Footer Institucional -->
-    <footer class="bg-slate-900 text-slate-300 text-xs py-4 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
-            <div class="flex items-center space-x-2">
-                <span class="font-bold text-white">Santiago de Cali</span>
-                <span>•</span>
-                <span class="text-slate-300">Alcaldía Distrital</span>
-            </div>
-            <div class="text-slate-400">
-                <span>Gestión de Encuestas Domiciliarias</span>
-            </div>
-        </div>
-    </footer>
 
     @stack('scripts')
 </body>
