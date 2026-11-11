@@ -204,6 +204,79 @@ class Entrega1BackendTest extends TestCase
     }
 
     /**
+     * Validación de Georreferenciación: Coordenadas fuera de Cali son rechazadas
+     */
+    public function test_ventanilla_rechaza_georreferenciacion_fuera_de_cali(): void
+    {
+        $userVentanilla = User::where('email', 'ventanilla17@cali.gov.co')->first();
+
+        // Coordenadas de Bogotá (Lat 4.7110, Lng -74.0721)
+        $payload = [
+            'nombres_solicitante' => 'Pedro',
+            'apellidos_solicitante' => 'Gómez',
+            'celular' => '3151234567',
+            'direccion' => 'Calle 13B # 85-20, Casa 4',
+            'comuna_corregimiento_id' => 17,
+            'barrio_id' => 60, // Pasoancho
+            'latitud' => 4.7110,
+            'longitud' => -74.0721,
+            'punto_atencion_id' => 1,
+        ];
+
+        $response = $this->actingAs($userVentanilla)
+            ->postJson('/api/solicitudes', $payload);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['latitud', 'longitud']);
+    }
+
+    /**
+     * Validación de Dirección: Direcciones fuera de Cali o con formato inválido son rechazadas
+     */
+    public function test_ventanilla_rechaza_direccion_fuera_de_cali_o_invalida(): void
+    {
+        $userVentanilla = User::where('email', 'ventanilla17@cali.gov.co')->first();
+
+        // 1. Dirección explícita de Bogotá
+        $responseBogota = $this->actingAs($userVentanilla)
+            ->postJson('/api/solicitudes', [
+                'nombres_solicitante' => 'Ana',
+                'apellidos_solicitante' => 'Torres',
+                'celular' => '3151234567',
+                'direccion' => 'Carrera 7 # 72-01, Bogotá',
+                'comuna_corregimiento_id' => 17,
+                'barrio_id' => 60,
+                'latitud' => 3.3768,
+                'longitud' => -76.5369,
+                'punto_atencion_id' => 1,
+            ]);
+
+        $responseBogota->assertStatus(422)
+            ->assertJson([
+                'success' => false,
+            ]);
+
+        // 2. Dirección sin nomenclatura válida
+        $responseInvalida = $this->actingAs($userVentanilla)
+            ->postJson('/api/solicitudes', [
+                'nombres_solicitante' => 'Ana',
+                'apellidos_solicitante' => 'Torres',
+                'celular' => '3151234567',
+                'direccion' => 'texto_aleatorio_sin_formato',
+                'comuna_corregimiento_id' => 17,
+                'barrio_id' => 60,
+                'latitud' => 3.3768,
+                'longitud' => -76.5369,
+                'punto_atencion_id' => 1,
+            ]);
+
+        $responseInvalida->assertStatus(422)
+            ->assertJson([
+                'success' => false,
+            ]);
+    }
+
+    /**
      * Requerimiento 4: Bitácora Diaria del Enrutador consolida solicitudes del día
      */
     public function test_enrutador_puede_consultar_bitacora_diaria_consolidada(): void

@@ -8,32 +8,7 @@
      x-init="initApp()"
      @keydown.escape.window="if(modalExito) modalExito = false">
 
-    <!-- Cabecera de la Sede Operativa -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 rounded-lg bg-cali-blue text-white flex items-center justify-center text-xl shadow-sm">
-                <i class="fa-solid fa-desktop"></i>
-            </div>
-            <div>
-                <div class="flex items-center space-x-2">
-                    <h1 class="text-xl font-bold text-slate-900">Módulo de Radicación en Ventanilla</h1>
-                </div>
-                <p class="text-xs text-slate-600 font-medium mt-0.5">
-                    Operador: <strong class="text-slate-800">{{ $usuario->nombre }}</strong> •
-                    Sede: <strong class="text-cali-blue">{{ $puntoAtencionPredeterminado ? $puntoAtencionPredeterminado->nombre : 'Oficina Central' }}</strong> (Comuna {{ $puntoAtencionPredeterminado->comuna_numero ?? 'N/D' }})
-                </p>
-            </div>
-        </div>
-
-        <!-- Indicador de Plazo -->
-        <div class="flex items-center space-x-3 bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5">
-            <i class="fa-solid fa-calendar-check text-cali-blue text-lg" aria-hidden="true"></i>
-            <div class="text-xs">
-                <div class="font-bold text-slate-800">Plazo de atención</div>
-                <div class="text-slate-600">15 días calendario a partir de la fecha de radicación</div>
-            </div>
-        </div>
-    </div>
+    <h1 class="sr-only">Módulo de Radicación en Ventanilla</h1>
 
     <!-- Modal de Confirmación de Radicado Exitoso (Accesible con Tecla Escape) -->
     <div x-show="modalExito" x-cloak
@@ -161,12 +136,34 @@
                 </div>
 
                 <div>
-                    <label for="campoDireccion" class="block text-xs font-bold text-slate-800 mb-1">
-                        Dirección del Predio a Encuestar *
+                    <label for="campoDireccion" class="block text-xs font-bold text-slate-800 mb-1 flex items-center justify-between">
+                        <span>Dirección del Predio en Cali *</span>
+                        <span x-show="buscandoDireccion" x-cloak class="text-[11px] text-cali-blue font-semibold">
+                            <i class="fa-solid fa-spinner fa-spin mr-1"></i> Verificando en Cali...
+                        </span>
                     </label>
-                    <input id="campoDireccion" type="text" x-model="form.direccion" required
-                        class="w-full text-xs rounded-lg border border-slate-300 px-3 py-2.5 focus:ring-2 focus:ring-cali-blue focus:border-cali-blue transition placeholder-slate-500 text-slate-900"
-                        placeholder="Ej. Calle 13B # 85-10, Casa 2 / Km 12 Vía Vorágine">
+                    <div class="flex space-x-2">
+                        <input id="campoDireccion" type="text" x-model="form.direccion" @input="validarDireccion()" required
+                            class="w-full text-xs rounded-lg border border-slate-300 px-3 py-2.5 focus:ring-2 focus:ring-cali-blue focus:border-cali-blue transition placeholder-slate-500 text-slate-900"
+                            placeholder="Ej. Calle 13B # 85-10 / Cra 1 # 4-50 / Km 12 Vía Vorágine">
+                        <button type="button" @click="buscarDireccionEnMapa()" title="Verificar y ubicar dirección en el mapa de Cali"
+                            class="min-h-[38px] px-3.5 py-2 bg-cali-blue hover:bg-cali-darkblue text-white text-xs font-bold rounded-lg transition flex items-center space-x-1.5 shrink-0 focus:outline-none focus:ring-2 focus:ring-cali-blue">
+                            <i class="fa-solid fa-magnifying-glass-location"></i>
+                            <span class="hidden sm:inline">Ubicar</span>
+                        </button>
+                    </div>
+
+                    <!-- Mensaje de error de dirección no válida en Cali -->
+                    <div x-show="errorDireccion" x-cloak class="mt-1.5 p-2 rounded-md bg-rose-50 border border-rose-200 text-[11px] text-rose-800 font-medium flex items-center space-x-1.5">
+                        <i class="fa-solid fa-triangle-exclamation text-rose-600 shrink-0"></i>
+                        <span x-text="errorDireccion"></span>
+                    </div>
+
+                    <!-- Mensaje de éxito de dirección verificada -->
+                    <div x-show="direccionVerificada && !errorDireccion" x-cloak class="mt-1 text-[11px] text-emerald-700 font-semibold flex items-center space-x-1">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Dirección verificada en Cali</span>
+                    </div>
                 </div>
 
                 <!-- Selectores de Territorio -->
@@ -219,11 +216,17 @@
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs font-bold text-cali-blue flex items-center">
                             <i class="fa-solid fa-location-crosshairs mr-1.5 text-cali-blue"></i>
-                            Ubicación geográfica
+                            Ubicación geográfica (Solo Cali)
                         </span>
                         <span class="text-[11px] px-2 py-0.5 rounded-md font-bold"
                               :class="tieneCoordenadas ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-amber-100 text-amber-900 border border-amber-300'"
                               x-text="tieneCoordenadas ? 'Ubicación seleccionada' : 'Seleccione en el mapa'"></span>
+                    </div>
+
+                    <!-- Alerta de coordenada fuera de Cali -->
+                    <div x-show="errorUbicacion" x-cloak class="mb-2.5 p-2.5 rounded-lg bg-rose-50 border border-rose-300 text-rose-900 text-xs flex items-center space-x-2" role="alert">
+                        <i class="fa-solid fa-circle-xmark text-rose-700 text-base shrink-0"></i>
+                        <span x-text="errorUbicacion" class="font-semibold"></span>
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
@@ -240,7 +243,7 @@
                     </div>
                     <p class="text-xs text-slate-600 mt-2 font-medium">
                         <i class="fa-solid fa-hand-pointer mr-1 text-slate-500"></i>
-                        Haga clic sobre el mapa a la derecha para posicionar el predio o arrastre el marcador para ajustar.
+                        Haga clic sobre el mapa a la derecha para posicionar el predio o arrastre el marcador dentro de Cali.
                     </p>
                 </div>
 
@@ -396,6 +399,10 @@ function ventanillaApp() {
         errorMessage: null,
         modalExito: false,
         ultimoRadicado: {},
+        errorUbicacion: null,
+        errorDireccion: null,
+        buscandoDireccion: false,
+        direccionVerificada: false,
 
         // Leaflet Mapa
         map: null,
@@ -411,8 +418,83 @@ function ventanillaApp() {
             return this.comunas.filter(c => c.tipo === 'CORREGIMIENTO');
         },
 
+        esCoordenadaEnCali(lat, lng) {
+            return lat >= 3.20000000 && lat <= 3.53000000 && lng >= -76.65000000 && lng <= -76.45000000;
+        },
+
         get tieneCoordenadas() {
-            return this.form.latitud && this.form.longitud;
+            return this.form.latitud && this.form.longitud && this.esCoordenadaEnCali(this.form.latitud, this.form.longitud);
+        },
+
+        validarDireccion() {
+            const dir = (this.form.direccion || '').trim();
+            if (!dir || dir.length < 5) {
+                this.errorDireccion = 'La dirección debe tener al menos 5 caracteres.';
+                return false;
+            }
+
+            const dirLower = dir.toLowerCase();
+            const ciudadesProhibidas = [
+                'bogota', 'bogotá', 'medellin', 'medellín', 'barranquilla', 'bucaramanga',
+                'cartagena', 'pereira', 'manizales', 'pasto', 'popayan', 'popayán',
+                'yumbo', 'jamundi', 'jamundí', 'palmira', 'candelaria', 'buenaventura',
+                'tulua', 'tuluá', 'buga', 'cartago'
+            ];
+
+            for (const ciudad of ciudadesProhibidas) {
+                const regex = new RegExp('\\b' + ciudad + '\\b', 'i');
+                if (regex.test(dirLower)) {
+                    this.errorDireccion = 'La dirección ingresada hace referencia a otro municipio (' + ciudad.toUpperCase() + ') fuera de Santiago de Cali.';
+                    return false;
+                }
+            }
+
+            const patronUrbano = /\b(calle|carrera|cra|cll|cl|cr|avenida|av|diagonal|diag|dg|transversal|trans|tv|autopista|circunvalar|callejon|callejón|pasaje|manzana|mz)\b\.?\s+[0-9a-z#\-\s\.]+/i;
+            const patronRural = /\b(km|kilometro|kilómetro|vereda|corregimiento|sector|finca|lote|parcela|parcelacion|parcelación|hacienda|hda|callejon|callejón|via|vía)\b\.?\s+[0-9a-z#\-\s\.]+/i;
+
+            if (!patronUrbano.test(dir) && !patronRural.test(dir)) {
+                this.errorDireccion = 'La dirección no corresponde a una nomenclatura válida de Cali (use Calle, Carrera, Avenida, Diagonal, Transversal, Km, Vereda con su respectivo número).';
+                return false;
+            }
+
+            this.errorDireccion = null;
+            return true;
+        },
+
+        async buscarDireccionEnMapa() {
+            if (!this.validarDireccion()) return;
+            this.buscandoDireccion = true;
+            this.errorUbicacion = null;
+
+            try {
+                const query = encodeURIComponent(this.form.direccion + ', Cali, Valle del Cauca, Colombia');
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&viewbox=-76.65,3.53,-76.45,3.20&bounded=1`);
+                const data = await res.json();
+
+                if (data && data.length > 0) {
+                    const lat = parseFloat(parseFloat(data[0].lat).toFixed(8));
+                    const lng = parseFloat(parseFloat(data[0].lon).toFixed(8));
+
+                    if (this.esCoordenadaEnCali(lat, lng)) {
+                        this.form.latitud = lat;
+                        this.form.longitud = lng;
+                        this.actualizarMarcadorPredio(lat, lng);
+                        this.map.setView([lat, lng], 16);
+                        this.direccionVerificada = true;
+                        this.errorUbicacion = null;
+                    } else {
+                        this.errorUbicacion = 'La dirección se localizó fuera del perímetro de Cali.';
+                    }
+                } else {
+                    this.direccionVerificada = false;
+                    this.errorDireccion = 'No se encontró la dirección exacta en el mapa de Cali. Por favor seleccione el punto en el mapa.';
+                }
+            } catch (err) {
+                // Si la red externa no responde, la validación sintáctica de Cali es suficiente
+                this.direccionVerificada = true;
+            } finally {
+                this.buscandoDireccion = false;
+            }
         },
 
         initApp() {
@@ -468,6 +550,12 @@ function ventanillaApp() {
                 const lat = parseFloat(e.latlng.lat.toFixed(8));
                 const lng = parseFloat(e.latlng.lng.toFixed(8));
 
+                if (!this.esCoordenadaEnCali(lat, lng)) {
+                    this.errorUbicacion = 'La ubicación seleccionada está fuera de Santiago de Cali. Solo se permite georreferenciar predios dentro de Cali.';
+                    return;
+                }
+
+                this.errorUbicacion = null;
                 this.form.latitud = lat;
                 this.form.longitud = lng;
                 this.actualizarMarcadorPredio(lat, lng);
@@ -492,8 +580,18 @@ function ventanillaApp() {
 
                 this.predioMarker.on('dragend', (event) => {
                     const position = event.target.getLatLng();
-                    this.form.latitud = parseFloat(position.lat.toFixed(8));
-                    this.form.longitud = parseFloat(position.lng.toFixed(8));
+                    const nLat = parseFloat(position.lat.toFixed(8));
+                    const nLng = parseFloat(position.lng.toFixed(8));
+
+                    if (!this.esCoordenadaEnCali(nLat, nLng)) {
+                        this.errorUbicacion = 'La ubicación arrastrada está fuera de Santiago de Cali. Solo se permite georreferenciar predios dentro de Cali.';
+                        this.predioMarker.setLatLng([this.form.latitud, this.form.longitud]);
+                        return;
+                    }
+
+                    this.errorUbicacion = null;
+                    this.form.latitud = nLat;
+                    this.form.longitud = nLng;
                 });
             }
 
@@ -553,6 +651,17 @@ function ventanillaApp() {
 
         async guardarSolicitud() {
             this.errorMessage = null;
+
+            if (!this.validarDireccion()) {
+                this.errorMessage = this.errorDireccion;
+                return;
+            }
+
+            if (!this.tieneCoordenadas) {
+                this.errorMessage = 'Debe seleccionar una ubicación válida dentro del perímetro de Santiago de Cali.';
+                return;
+            }
+
             this.guardando = true;
 
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

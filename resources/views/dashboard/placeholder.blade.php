@@ -5,15 +5,31 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
-    <!-- Tarjeta de Identidad y Sesión Autenticada -->
+    <!-- Mensaje temporal de bienvenida (se oculta automáticamente a los 5 segundos) -->
+    <div x-data="{ visible: true }"
+         x-init="setTimeout(() => visible = false, 5000)"
+         x-show="visible"
+         x-transition:leave="transition ease-in duration-300"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="bg-slate-50 border-l-4 border-slate-600 rounded-r-xl p-4 mb-6 border border-slate-200 flex items-center justify-between"
+         role="status">
+        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
+            <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+            <span>Bienvenido al sistema. Su sesión ha sido verificada correctamente.</span>
+        </div>
+        <button type="button" @click="visible = false" class="text-slate-400 hover:text-slate-600 text-xs px-2 py-1 rounded" title="Cerrar">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    @if($rolNombre !== 'ADMINISTRADOR')
+    <!-- Tarjeta de Identidad para otros perfiles institucionales -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            
             <div class="flex items-center space-x-5">
                 <div class="w-14 h-14 rounded-lg bg-slate-900 text-cali-gold flex items-center justify-center text-2xl shadow-sm border border-slate-700">
-                    @if($rolNombre === 'ADMINISTRADOR')
-                        <i class="fa-solid fa-user-gear"></i>
-                    @elseif($rolNombre === 'ENCUESTADOR')
+                    @if($rolNombre === 'ENCUESTADOR')
                         <i class="fa-solid fa-clipboard-user"></i>
                     @elseif($rolNombre === 'CALIDAD')
                         <i class="fa-solid fa-award"></i>
@@ -41,76 +57,9 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Accesos de navegación si es administrador -->
-            @if($rolNombre === 'ADMINISTRADOR')
-            <div class="flex flex-wrap gap-2">
-                <a href="{{ route('ventanilla.index') }}" class="min-h-[44px] px-4 py-2.5 rounded-lg bg-cali-blue hover:bg-cali-darkblue text-white text-xs font-bold transition shadow-sm inline-flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-amber-400">
-                    <i class="fa-solid fa-desktop"></i>
-                    <span>Ventanilla</span>
-                </a>
-                <a href="{{ route('enrutador.bitacora') }}" class="min-h-[44px] px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition shadow-sm inline-flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-amber-400">
-                    <i class="fa-solid fa-route"></i>
-                    <span>Bitácora</span>
-                </a>
-            </div>
-            @endif
-
         </div>
     </div>
-
-    <!-- Mensaje del perfil -->
-    <div class="bg-slate-50 border-l-4 border-slate-600 rounded-r-xl p-4 mb-6 border border-slate-200">
-        <p class="text-xs text-slate-700 leading-relaxed font-medium">
-            Bienvenido al sistema. Su sesión ha sido verificada correctamente. Los módulos específicos de su perfil se habilitarán en la siguiente fase operativa (Sprint 2).
-        </p>
-    </div>
-
-    <!-- Módulos Planificados para este Rol -->
-    <div class="mb-6">
-        <div class="flex items-center justify-between mb-4">
-            <div>
-                <span class="text-sm font-bold text-slate-900">
-                    Módulos en planificación
-                </span>
-            </div>
-            <span class="text-xs font-semibold px-2.5 py-0.5 bg-slate-200 text-slate-700 rounded">
-                Sprint 2
-            </span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            @foreach($infoModuloSprint2['modulos_sprint_2'] as $mod)
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:border-cali-blue transition flex flex-col justify-between">
-                <div>
-                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-cali-blue flex items-center justify-center text-base mb-3">
-                        @if($mod['icono'] === 'map')
-                            <i class="fa-solid fa-map-location-dot"></i>
-                        @elseif($mod['icono'] === 'clipboard')
-                            <i class="fa-solid fa-clipboard-check"></i>
-                        @elseif($mod['icono'] === 'chart')
-                            <i class="fa-solid fa-chart-pie"></i>
-                        @elseif($mod['icono'] === 'document')
-                            <i class="fa-solid fa-file-pdf"></i>
-                        @elseif($mod['icono'] === 'check-circle')
-                            <i class="fa-solid fa-circle-check"></i>
-                        @elseif($mod['icono'] === 'bell')
-                            <i class="fa-solid fa-bell"></i>
-                        @else
-                            <i class="fa-solid fa-cubes"></i>
-                        @endif
-                    </div>
-                    <h4 class="text-sm font-bold text-slate-900 mb-1.5">{{ $mod['nombre'] }}</h4>
-                    <p class="text-xs text-slate-600 leading-relaxed font-medium">{{ $mod['desc'] }}</p>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
-                    <span>Estado:</span>
-                    <span class="font-medium text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">En desarrollo</span>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </div>
+    @endif
 
     <!-- Resumen del Sistema -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">

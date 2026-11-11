@@ -56,8 +56,8 @@ class VentanillaController extends Controller
             'direccion' => ['required', 'string', 'min:5', 'max:255'],
             'comuna_corregimiento_id' => ['required', 'integer', 'exists:comunas_corregimientos,id'],
             'barrio_id' => ['required', 'integer', 'exists:barrios_veredas,id'],
-            'latitud' => ['required', 'numeric', 'between:3.20000000,3.60000000'],
-            'longitud' => ['required', 'numeric', 'between:-76.68000000,-76.40000000'],
+            'latitud' => ['required', 'numeric', 'between:3.20000000,3.53000000'],
+            'longitud' => ['required', 'numeric', 'between:-76.65000000,-76.45000000'],
             'punto_atencion_id' => ['required', 'integer', 'exists:puntos_atencion,id'],
             'observaciones' => ['nullable', 'string', 'max:1000'],
         ], [
@@ -69,11 +69,23 @@ class VentanillaController extends Controller
             'comuna_corregimiento_id.required' => 'Debe seleccionar una comuna o corregimiento de Cali.',
             'barrio_id.required' => 'Debe seleccionar un barrio o vereda.',
             'latitud.required' => 'Debe georreferenciar el predio en el mapa interactivo (latitud requerida).',
-            'latitud.between' => 'La coordenada de latitud debe corresponder al perímetro del municipio de Santiago de Cali.',
+            'latitud.between' => 'La ubicación seleccionada está fuera de Santiago de Cali. Solo se permite georreferenciar predios dentro de Cali.',
             'longitud.required' => 'Debe georreferenciar el predio en el mapa interactivo (longitud requerida).',
-            'longitud.between' => 'La coordenada de longitud debe corresponder al perímetro del municipio de Santiago de Cali.',
+            'longitud.between' => 'La ubicación seleccionada está fuera de Santiago de Cali. Solo se permite georreferenciar predios dentro de Cali.',
             'punto_atencion_id.required' => 'El punto de atención institucional es obligatorio.',
         ]);
+
+        // Validación estricta de que la dirección corresponda y exista en Cali
+        $validacionDireccion = $this->validarDireccionCali($validated['direccion']);
+        if (!$validacionDireccion['valida']) {
+            return response()->json([
+                'success' => false,
+                'message' => $validacionDireccion['mensaje'],
+                'errors' => [
+                    'direccion' => [$validacionDireccion['mensaje']],
+                ],
+            ], 422);
+        }
 
         // Validación estricta de coherencia territorial:
         // El barrio seleccionado DEBE pertenecer a la comuna/corregimiento elegida
@@ -179,5 +191,59 @@ class VentanillaController extends Controller
             'total' => $solicitudes->count(),
             'data' => $solicitudes,
         ]);
+    }
+
+    /**
+     * Valida que la dirección física ingresada tenga nomenclatura válida y corresponda a Santiago de Cali
+     */
+    protected function validarDireccionCali(string $direccion): array
+    {
+        $dir = trim($direccion);
+        if (mb_strlen($dir, 'UTF-8') < 5) {
+            return [
+                'valida' => false,
+                'mensaje' => 'La dirección ingresada es demasiado corta para ser válida en Cali.',
+            ];
+        }
+
+        $dirLower = mb_strtolower($dir, 'UTF-8');
+
+        // Municipios o ciudades ajenas a Santiago de Cali
+        $municipiosAjenos = [
+            'bogota', 'bogotá', 'medellin', 'medellín', 'barranquilla', 'bucaramanga',
+            'cartagena', 'pereira', 'manizales', 'pasto', 'popayan', 'popayán',
+            'yumbo', 'jamundi', 'jamundí', 'palmira', 'candelaria', 'buenaventura',
+            'tulua', 'tuluá', 'buga', 'cartago', 'armenia', 'ibague', 'ibagué',
+            'cúcuta', 'cucuta', 'valledupar', 'villavicencio', 'santa marta'
+        ];
+
+        foreach ($municipiosAjenos as $mun) {
+            if (preg_match('/\b' . preg_quote($mun, '/') . '\b/u', $dirLower)) {
+                return [
+                    'valida' => false,
+                    'mensaje' => 'La dirección ingresada hace referencia a otro municipio (' . ucfirst($mun) . ') fuera de Santiago de Cali.',
+                ];
+            }
+        }
+
+        // Patrón de nomenclatura urbana de Cali
+        // Ej: Calle 13B # 85-20, Cra 100 # 15-30, Av 6 Norte, Diagonal 23, Transversal 5, Mz 4
+        $patronUrbano = '/\b(calle|carrera|cra|cll|cl|cr|avenida|av|diagonal|diag|dg|transversal|trans|tv|autopista|circunvalar|callejon|callejón|pasaje|manzana|mz)\b\.?\s+[0-9a-z#\-\s\.]+/iu';
+
+        // Patrón de nomenclatura rural de Cali (Corregimientos: Pance, La Buitrera, Montebello, Felidia, etc.)
+        // Ej: Km 12 Vía Vorágine, Vereda San Francisco, Corregimiento Navarro, Sector La Fonda, Finca El Paraíso
+        $patronRural = '/\b(km|kilometro|kilómetro|vereda|corregimiento|sector|finca|lote|parcela|parcelacion|parcelación|hacienda|hda|callejon|callejón|via|vía)\b\.?\s+[0-9a-z#\-\s\.]+/iu';
+
+        if (!preg_match($patronUrbano, $dir) && !preg_match($patronRural, $dir)) {
+            return [
+                'valida' => false,
+                'mensaje' => 'La dirección no cuenta con una nomenclatura válida para Santiago de Cali (debe iniciar o contener Calle, Carrera, Avenida, Diagonal, Transversal, Km, Vereda o Corregimiento con su numeración o referencia).',
+            ];
+        }
+
+        return [
+            'valida' => true,
+            'mensaje' => 'Dirección válida en Cali.',
+        ];
     }
 }
