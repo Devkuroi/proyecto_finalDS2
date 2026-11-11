@@ -86,7 +86,7 @@ class AuthController extends Controller
                 ]);
             }
 
-            return redirect()->intended($redirectUrl)->with('success', "Bienvenido(a), {$user->nombre} ({$rolNombre})");
+            return redirect()->intended($redirectUrl);
         }
 
         if ($request->expectsJson() || $request->is('api/*')) {

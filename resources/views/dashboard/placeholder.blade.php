@@ -4,24 +4,6 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    
-    <!-- Mensaje temporal de bienvenida (se oculta automáticamente a los 5 segundos) -->
-    <div x-data="{ visible: true }"
-         x-init="setTimeout(() => visible = false, 5000)"
-         x-show="visible"
-         x-transition:leave="transition ease-in duration-300"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         class="bg-slate-50 border-l-4 border-slate-600 rounded-r-xl p-4 mb-6 border flex items-center justify-between"
-         role="status">
-        <div class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium">
-            <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-            <span>Bienvenido al sistema. Su sesión ha sido verificada correctamente.</span>
-        </div>
-        <button type="button" @click="visible = false" class="text-slate-400 hover:text-slate-600 text-xs px-2 py-1 rounded" title="Cerrar">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-    </div>
 
     @if($rolNombre !== 'ADMINISTRADOR')
     <!-- Tarjeta de Identidad para otros perfiles institucionales -->
